@@ -53,6 +53,19 @@ class ToolChatClient:
    - 功能：通过curl访问网页，并返回网页内容
    - 参数：url（要访问的网页URL）
    - 示例：当用户说"请访问百度首页并返回内容"时，使用此工具
+   
+   ⚠️ wttr.in天气预报API使用说明（非常重要，请仔细阅读）：
+   - 获取3天天气预报（今天、明天、后天）：https://wttr.in/城市名?format=j1
+   - 返回JSON格式，包含weather数组：
+     * weather[0] = 今天的天气
+     * weather[1] = 明天的天气 ← 用户问"明天"时用这个！
+     * weather[2] = 后天的天气
+   - 每天的数据包含：
+     * maxtempC: 最高温度（°C）
+     * mintempC: 最低温度（°C）
+     * avgtempC: 平均温度（°C）
+   - 当用户询问"明天"的天气预报时，必须使用?format=j1，然后从weather[1]中读取数据
+   - 示例：https://wttr.in/Chengdu?format=j1
 
 使用工具的格式：
 <tool_call>
@@ -255,7 +268,35 @@ class ToolChatClient:
     def send_request_stream(self, prompt, max_tokens=262144, debug=False):
         """发送流式请求，实时输出回复内容"""
         start_time = time.time()
+        full_content = ''
         
+        # 支持多轮工具调用的循环
+        max_tool_rounds = 3  # 最多处理3轮工具调用
+        
+        for round_num in range(max_tool_rounds):
+            if round_num > 0:
+                if debug:
+                    print(f"\n[调试] 第{round_num + 1}轮工具调用...")
+            
+            content, has_tool_call = self._send_single_stream(
+                prompt, max_tokens, debug, round_num == 0
+            )
+            
+            if content:
+                full_content = content
+            
+            # 如果没有工具调用，或者已经达到最大轮数，退出循环
+            if not has_tool_call or round_num >= max_tool_rounds - 1:
+                break
+        
+        print()
+        end_time = time.time()
+        total_time = end_time - start_time
+        
+        return full_content, total_time
+    
+    def _send_single_stream(self, prompt, max_tokens, debug, is_first_round):
+        """发送单次流式请求，返回(内容, 是否有工具调用)"""
         if self.base_url.startswith('https://'):
             conn = http.client.HTTPSConnection(self.host)
         else:
@@ -287,15 +328,17 @@ class ToolChatClient:
         full_content = ''
         buffer = ''
         
+        # 工具调用缓冲区
+        tool_calls_buffer = {}  # 按index存储tool_call的累积数据
+        pending_tool_calls = []  # 存储完整的tool_call，等待执行
+        tool_call_response = ''  # 存储工具调用后AI的最终响应
+        
         # 准备日志文件
         if debug:
             log_dir = os.path.join(os.path.dirname(__file__), 'logs')
             os.makedirs(log_dir, exist_ok=True)
             log_file = os.path.join(log_dir, f'chat_{time.strftime("%Y%m%d_%H%M%S")}.txt')
             print(f"调试模式已启用，输出将保存到: {log_file}")
-        
-        tool_calls = []
-        tool_call_id = None
         
         try:
             while True:
@@ -312,6 +355,23 @@ class ToolChatClient:
                     if line.startswith('data: '):
                         json_str = line[6:].strip()
                         if json_str == '[DONE]':
+                            # 流式响应结束，检查并执行待处理的工具调用
+                            if pending_tool_calls:
+                                for tool_call_data in pending_tool_calls:
+                                    response_content = self._execute_pending_tool_call(
+                                        tool_call_data, 
+                                        data, 
+                                        conn, 
+                                        headers, 
+                                        prompt
+                                    )
+                                    if response_content:
+                                        tool_call_response = response_content
+                                # 有工具调用，返回工具执行后的响应
+                                return tool_call_response if tool_call_response else full_content, True
+                            else:
+                                # 没有工具调用，正常结束
+                                return full_content, False
                             continue
                         
                         try:
@@ -322,95 +382,48 @@ class ToolChatClient:
                                 
                                 # 检测工具调用请求
                                 if 'tool_calls' in delta:
-                                    tool_call = delta['tool_calls'][0]
-                                    tool_calls.append(tool_call)
-                                    
-                                    # 从所有tool_calls中查找工具名称和参数
-                                    tool_name = None
-                                    tool_args = {}
-                                    
-                                    # 先检查当前tool_call
-                                    if 'function' in tool_call:
-                                        if 'name' in tool_call['function']:
-                                            tool_name = tool_call['function']['name']
-                                        if 'arguments' in tool_call['function'] and tool_call['function']['arguments']:
-                                            try:
-                                                tool_args = json.loads(tool_call['function']['arguments'])
-                                            except:
-                                                pass
-                                    
-                                    # 如果当前tool_call没有名称，从之前的tool_calls中查找
-                                    if not tool_name and tool_calls:
-                                        for tc in tool_calls:
-                                            if 'function' in tc and 'name' in tc['function']:
-                                                tool_name = tc['function']['name']
-                                                break
-                                    
-                                    # 确保tool_call_id
-                                    tool_call_id = tool_call.get('id') or (tool_calls[0].get('id') if tool_calls else None)
-                                    
-                                    # 打印原始tool_call数据进行调试
-                                    print(f"\n原始tool_call数据: {json.dumps(tool_call, ensure_ascii=False)}")
-                                    
-                                    print(f"工具调用: {tool_name}")
-                                    print(f"参数: {tool_args}")
-                                    
-                                    # 执行工具（处理大小写）
-                                    if tool_name:
-                                        # 转换为小写以匹配工具名称
-                                        normalized_tool_name = tool_name.lower()
-                                        tool_result = self.execute_tool(normalized_tool_name, tool_args)
+                                    for tc in delta['tool_calls']:
+                                        index = tc.get('index', 0)
                                         
-                                        print(f"工具执行结果: {tool_result}")
-                                        
-                                        # 将工具执行结果添加到聊天历史
-                                        self.add_to_history('assistant', {
-                                            'tool_calls': [{
-                                                'id': tool_call_id,
+                                        # 初始化该index的tool_call缓冲区
+                                        if index not in tool_calls_buffer:
+                                            tool_calls_buffer[index] = {
+                                                'id': None,
                                                 'type': 'function',
                                                 'function': {
-                                                    'name': tool_name,
-                                                    'arguments': json.dumps(tool_args)
+                                                    'name': None,
+                                                    'arguments': ''
                                                 }
-                                            }]
-                                        })
+                                            }
                                         
-                                        # 发送工具执行结果
-                                        self.add_to_history('tool', {
-                                            'tool_call_id': tool_call_id,
-                                            'name': tool_name,
-                                            'content': json.dumps(tool_result)
-                                        })
+                                        # 累积tool_call数据
+                                        if 'id' in tc:
+                                            tool_calls_buffer[index]['id'] = tc['id']
                                         
-                                        # 重新发送请求获取最终响应
-                                        print("AI: ", end='', flush=True)
-                                        conn.close()
+                                        if 'function' in tc:
+                                            if 'name' in tc['function']:
+                                                tool_calls_buffer[index]['function']['name'] = tc['function']['name']
+                                            if 'arguments' in tc['function']:
+                                                # 累积arguments片段
+                                                tool_calls_buffer[index]['function']['arguments'] += tc['function']['arguments']
                                         
-                                        # 重新构建请求
-                                        if self.base_url.startswith('https://'):
-                                            conn = http.client.HTTPSConnection(self.host)
-                                        else:
-                                            conn = http.client.HTTPConnection(self.host)
-                                        
-                                        # 重新构建请求时禁用工具调用
-                                        data['messages'] = [
-                                            {'role': 'system', 'content': self.system_prompt},
-                                            *self.chat_history,
-                                            {'role': 'user', 'content': prompt}
-                                        ]
-                                        # 禁用工具调用，因为已经执行过了
-                                        data['tool_choice'] = 'none'
-                                        
-                                        conn.request('POST', f'{self.path}/chat/completions', json.dumps(data), headers)
-                                        response = conn.getresponse()
-                                        buffer = ''
-                                        tool_calls = []
-                                        tool_call_id = None
-                                        continue
-                                    else:
-                                        # 工具名称为空，忽略这个请求
-                                        print(f"工具名称为空，忽略工具调用请求")
-                                        continue
+                                        # 尝试解析完整的arguments
+                                        tool_args_str = tool_calls_buffer[index]['function']['arguments']
+                                        if tool_args_str:
+                                            try:
+                                                tool_args = json.loads(tool_args_str)
+                                                tool_name = tool_calls_buffer[index]['function']['name']
+                                                
+                                                # 如果成功解析，说明参数完整，加入待执行队列
+                                                if tool_name:
+                                                    pending_tool_calls.append({
+                                                        'id': tool_calls_buffer[index]['id'],
+                                                        'name': tool_name,
+                                                        'arguments': tool_args
+                                                    })
+                                            except json.JSONDecodeError:
+                                                # arguments还不完整，继续等待后续chunk
+                                                pass
                                 
                                 # 正常文本内容
                                 content = delta.get('content', '')
@@ -431,69 +444,121 @@ class ToolChatClient:
                     buffer = ''
         except KeyboardInterrupt:
             print('\n\n用户中断')
+            return full_content, False
         finally:
             conn.close()
         
-        # 完成后写入完整内容到日志
-        if debug:
-            with open(log_file, 'a', encoding='utf-8') as f:
-                f.write('\n\n===== 完整对话 =====\n')
-                f.write(f'用户: {prompt}\n')
-                f.write(f'AI: {full_content}\n')
+        # 流结束后的兜底检查
+        if pending_tool_calls:
+            for tool_call_data in pending_tool_calls:
+                response_content = self._execute_pending_tool_call(
+                    tool_call_data, 
+                    data, 
+                    conn, 
+                    headers, 
+                    prompt
+                )
+                if response_content:
+                    tool_call_response = response_content
+            return tool_call_response if tool_call_response else full_content, True
         
-        # 如果没有获取到内容，尝试从完整响应中提取
-        if not full_content:
-            try:
-                # 重新发送非流式请求获取完整响应
-                if self.base_url.startswith('https://'):
-                    conn = http.client.HTTPSConnection(self.host)
+        return full_content, False
+    
+    def _execute_pending_tool_call(self, tool_call_data, data, conn, headers, prompt):
+        """执行累积完整的工具调用"""
+        tool_id = tool_call_data['id']
+        tool_name = tool_call_data['name']
+        tool_args = tool_call_data['arguments']
+        
+        print(f"\n完整工具调用: {tool_name}")
+        print(f"完整参数: {json.dumps(tool_args, ensure_ascii=False)}")
+        
+        # 执行工具
+        normalized_tool_name = tool_name.lower()
+        tool_result = self.execute_tool(normalized_tool_name, tool_args)
+        
+        print(f"工具执行结果: {json.dumps(tool_result, ensure_ascii=False)}")
+        
+        # 将工具执行结果添加到聊天历史
+        self.add_to_history('assistant', {
+            'tool_calls': [{
+                'id': tool_id,
+                'type': 'function',
+                'function': {
+                    'name': tool_name,
+                    'arguments': json.dumps(tool_args, ensure_ascii=False)
+                }
+            }]
+        })
+        
+        # 发送工具执行结果
+        self.add_to_history('tool', {
+            'tool_call_id': tool_id,
+            'name': tool_name,
+            'content': json.dumps(tool_result, ensure_ascii=False)
+        })
+        
+        # 重新发送请求获取最终响应
+        print("\nAI: ", end='', flush=True)
+        conn.close()
+        
+        # 重新构建请求
+        if self.base_url.startswith('https://'):
+            conn = http.client.HTTPSConnection(self.host)
+        else:
+            conn = http.client.HTTPConnection(self.host)
+        
+        # 重新构建请求时禁用工具调用
+        data['messages'] = [
+            {'role': 'system', 'content': self.system_prompt},
+            *self.chat_history,
+            {'role': 'user', 'content': prompt}
+        ]
+        # 禁用工具调用，因为已经执行过了
+        data['tool_choice'] = 'none'
+        
+        conn.request('POST', f'{self.path}/chat/completions', json.dumps(data), headers)
+        response = conn.getresponse()
+        
+        # 重新读取响应流
+        full_content = ''
+        buffer = ''
+        
+        try:
+            while True:
+                chunk = response.read(1024)
+                if not chunk:
+                    break
+                
+                buffer += chunk.decode('utf-8', errors='ignore')
+                
+                lines = buffer.split('\n')
+                for line in lines:
+                    line = line.strip()
+                    if line.startswith('data: '):
+                        json_str = line[6:].strip()
+                        if json_str == '[DONE]':
+                            continue
+                        
+                        try:
+                            chunk_data = json.loads(json_str)
+                            if 'choices' in chunk_data and len(chunk_data['choices']) > 0:
+                                delta = chunk_data['choices'][0].get('delta', {})
+                                content = delta.get('content', '')
+                                if content:
+                                    print(content, end='', flush=True)
+                                    full_content += content
+                        except json.JSONDecodeError:
+                            pass
+                
+                if len(lines) > 0:
+                    buffer = lines[-1]
                 else:
-                    conn = http.client.HTTPConnection(self.host)
-                
-                data['stream'] = False
-                conn.request('POST', f'{self.path}/chat/completions', json.dumps(data), headers)
-                response = conn.getresponse()
-                response_data = json.loads(response.read().decode())
-                conn.close()
-                
-                if 'error' not in response_data:
-                    message = response_data['choices'][0]['message']
-                    content = message.get('content', '').strip()
-                    if content:
-                        full_content = content
-                    else:
-                        # 尝试从reasoning_content中提取
-                        reasoning_content = message.get('reasoning_content', '')
-                        if reasoning_content:
-                            # 尝试不同的提取模式
-                            patterns = [
-                                r'Final Selection:.*?["\']([^"\']*?[\u4e00-\u9fff]+[^"\']*?)["\']',
-                                r'Final Polish:.*?["\']([^"\']*?[\u4e00-\u9fff]+[^"\']*?)["\']',
-                                r'最终选择:.*?["\']([^"\']*?[\u4e00-\u9fff]+[^"\']*?)["\']',
-                                r'最终润色:.*?["\']([^"\']*?[\u4e00-\u9fff]+[^"\']*?)["\']'
-                            ]
-                            for pattern in patterns:
-                                match = re.search(pattern, reasoning_content, re.DOTALL)
-                                if match:
-                                    full_content = match.group(1).strip()
-                                    break
-                            
-                            if not full_content:
-                                # 尝试直接提取中文句子
-                                chinese_sentences = re.findall(r'[\u4e00-\u9fff][\u4e00-\u9fff，。！？；：""\'\'（）\s]*[。！？]', reasoning_content)
-                                if chinese_sentences:
-                                    full_content = ''.join(chinese_sentences)
-            except Exception as e:
-                print(f"获取完整响应失败: {e}")
+                    buffer = ''
+        finally:
+            conn.close()
         
-        if not full_content:
-            full_content = '抱歉，模型没有返回有效内容。'
-        
-        print()
-        end_time = time.time()
-        total_time = end_time - start_time
-        
-        return full_content, total_time
+        return full_content
     
     def add_to_history(self, role, content):
         """添加消息到聊天历史"""

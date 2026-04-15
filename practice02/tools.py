@@ -192,21 +192,49 @@ class Tools:
             if not url:
                 return {"error": "缺少URL参数"}
             
+            original_url = url
+            
+            # 如果是 wttr.in 天气预报网站，自动添加 format=j1 参数（返回3天预报JSON）
+            if 'wttr.in' in url and 'format=' not in url:
+                # 判断 URL 是否已经有查询参数
+                if '?' in url:
+                    url = url + '&format=j1'
+                else:
+                    url = url + '?format=j1'
+            
             # 执行HTTP请求
             with urllib.request.urlopen(url) as response:
                 # 获取响应状态码
                 status_code = response.getcode()
                 # 获取响应头
                 headers = dict(response.getheaders())
+                # 获取内容类型
+                content_type = headers.get('Content-Type', '')
                 # 读取响应内容
                 content = response.read().decode('utf-8', errors='ignore')
+                
+                # 对wttr.in特殊处理：保留完整内容（天气预报数据很短）
+                if 'wttr.in' in original_url:
+                    # wttr.in的format=2返回简洁文本，通常只有几十字节
+                    # format=1返回更详细的文本
+                    # 不截断，直接返回完整内容
+                    pass
+                elif 'json' in content_type:
+                    # JSON格式保留更多
+                    content = content[:5000]
+                elif 'html' in content_type:
+                    # HTML格式只保留前2000字符
+                    content = content[:2000] + '\n...[HTML内容已截断]...'
+                else:
+                    # 其他格式保留3000字符
+                    content = content[:3000]
                 
                 return {
                     "success": True,
                     "url": url,
                     "status_code": status_code,
-                    "headers": headers,
-                    "content": content[:10000]  # 限制返回内容长度，避免过大
+                    "content_type": content_type,
+                    "content": content
                 }
         except urllib.error.URLError as e:
             return {"error": f"URL错误: {str(e)}"}

@@ -112,6 +112,12 @@ python tool_chat_client.py
 2. **动态分割点计算**：根据compress_ratio（默认0.7）智能计算压缩范围
 3. **最小保留保障**：确保至少保留最近一轮对话（user + assistant）
 4. **LLM总结优化**：使用低温参数（temperature=0.3）确保总结准确性
+5. **Qwen3.5适配**：支持从reasoning_content提取内容，三层降级容错机制
+
+**开发注意事项：**
+- 📖 详细文档：[practice03/开发注意事项.md](./practice03/开发注意事项.md)
+- 🔍 核心问题：Qwen3.5模型的Reasoning Content特性、Prompt优化、调试技巧等
+- 💡 最佳实践：推理型模型的内容提取策略、多层容错机制设计
 
 **可用命令：**
 - `exit` / `quit` - 退出程序

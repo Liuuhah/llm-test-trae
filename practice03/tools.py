@@ -4,6 +4,8 @@ from datetime import datetime
 import stat
 import urllib.request
 import urllib.error
+import re
+from urllib.parse import quote, urlparse, urlunparse
 
 class Tools:
     def list_directory(self, directory_path):
@@ -194,48 +196,76 @@ class Tools:
             
             original_url = url
             
-            # 如果是 wttr.in 天气预报网站，自动添加 format=j1 参数（返回3天预报JSON）
-            if 'wttr.in' in url and 'format=' not in url:
-                # 判断 URL 是否已经有查询参数
-                if '?' in url:
-                    url = url + '&format=j1'
-                else:
-                    url = url + '?format=j1'
+            # wttr.in 天气预报网站：不添加 format 参数，返回默认的3天文本表格预报
+            # 如果用户或 AI 指定了 format 参数，移除它以避免只返回当前天气
+            if 'wttr.in' in url:
+                # 移除可能存在的 format 参数（如果 AI 错误地添加了 format=1/2/3/j1等）
+                url = re.sub(r'[&?]format=[123jJ][0-9]*', '', url)
+                # 清理多余的 & 或 ?
+                url = re.sub(r'\?&', '?', url)
+                url = re.sub(r'\?$', '', url)
+                url = re.sub(r'&$', '', url)
+            
+            # 对 URL 进行编码，处理中文字符（如"成都" → "%E6%88%90%E9%83%BD"）
+            parsed = urlparse(url)
+            # 只对 path 部分进行编码，保留 query 参数
+            encoded_path = quote(parsed.path, safe='/')
+            encoded_url = urlunparse((
+                parsed.scheme,
+                parsed.netloc,
+                encoded_path,
+                parsed.params,
+                parsed.query,
+                parsed.fragment
+            ))
+            url = encoded_url
             
             # 执行HTTP请求
-            with urllib.request.urlopen(url) as response:
-                # 获取响应状态码
-                status_code = response.getcode()
-                # 获取响应头
-                headers = dict(response.getheaders())
-                # 获取内容类型
-                content_type = headers.get('Content-Type', '')
-                # 读取响应内容
-                content = response.read().decode('utf-8', errors='ignore')
-                
-                # 对wttr.in特殊处理：保留完整内容（天气预报数据很短）
-                if 'wttr.in' in original_url:
-                    # wttr.in的format=2返回简洁文本，通常只有几十字节
-                    # format=1返回更详细的文本
-                    # 不截断，直接返回完整内容
-                    pass
-                elif 'json' in content_type:
-                    # JSON格式保留更多
-                    content = content[:5000]
-                elif 'html' in content_type:
-                    # HTML格式只保留前2000字符
-                    content = content[:2000] + '\n...[HTML内容已截断]...'
-                else:
-                    # 其他格式保留3000字符
-                    content = content[:3000]
-                
-                return {
-                    "success": True,
-                    "url": url,
-                    "status_code": status_code,
-                    "content_type": content_type,
-                    "content": content
-                }
+            # 对于 wttr.in，需要设置 User-Agent 为 "curl" 以获取文本格式而非 HTML
+            if 'wttr.in' in url:
+                req = urllib.request.Request(url, headers={'User-Agent': 'curl'})
+                with urllib.request.urlopen(req) as response:
+                    # 获取响应状态码
+                    status_code = response.getcode()
+                    # 获取响应头
+                    headers = dict(response.getheaders())
+                    # 获取内容类型
+                    content_type = headers.get('Content-Type', '')
+                    # 读取响应内容
+                    content = response.read().decode('utf-8', errors='ignore')
+            else:
+                with urllib.request.urlopen(url) as response:
+                    # 获取响应状态码
+                    status_code = response.getcode()
+                    # 获取响应头
+                    headers = dict(response.getheaders())
+                    # 获取内容类型
+                    content_type = headers.get('Content-Type', '')
+                    # 读取响应内容
+                    content = response.read().decode('utf-8', errors='ignore')
+                        
+            # wttr.in 不加 format 参数时返回3天文本表格预报（约500-800 tokens）
+            # 保持与其他 URL 一致的截断逻辑
+            if 'wttr.in' in original_url and 'text/plain' in content_type:
+                # wttr.in 文本格式不截断，保留完整内容（通常只有2-3KB）
+                pass
+            elif 'json' in content_type:
+                # JSON格式保留更多
+                content = content[:5000]
+            elif 'html' in content_type:
+                # HTML格式只保留前2000字符
+                content = content[:2000] + '\n...[HTML内容已截断]...'
+            else:
+                # 其他格式保疙3000字符
+                content = content[:3000]
+                        
+            return {
+                "success": True,
+                "url": url,
+                "status_code": status_code,
+                "content_type": content_type,
+                "content": content
+            }
         except urllib.error.URLError as e:
             return {"error": f"URL错误: {str(e)}"}
         except urllib.error.HTTPError as e:

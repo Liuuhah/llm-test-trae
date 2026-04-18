@@ -137,7 +137,7 @@ class ChatCompressClient:
                 "type": "function",
                 "function": {
                     "name": "curl",
-                    "description": "通过curl访问网页，并返回网页内容",
+                    "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时，使用英文城市名（如Chengdu、Beijing），不要使用中文。格式：https://wttr.in/{城市英文名}",
                     "parameters": {
                         "type": "object",
                         "properties": {

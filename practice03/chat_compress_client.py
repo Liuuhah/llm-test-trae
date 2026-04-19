@@ -17,9 +17,19 @@ class ChatCompressClient:
         self.tools = self._register_tools()
         
         # 压缩配置
-        self.max_rounds = 4  # 最大对话轮数
-        self.max_context_tokens = 3000  # 最大上下文token数
+        self.max_rounds = 5  # 最大对话轮数
+        self.max_context_tokens = 262144  # 最大上下文token数
         self.compress_ratio = 0.7  # 压缩前70%的内容
+        
+        # 压缩控制标志
+        self.skip_next_compress = False  # 单次跳过标志（只对下一次有效）
+        self.auto_compress_enabled = True  # 全局自动压缩开关
+        
+        # 关键信息提取配置
+        self.auto_extract_enabled = True  # 自动提取开关
+        self.skip_next_extract = False    # 单次跳过标志
+        self.extract_interval = 5         # 提取间隔（每5轮对话）
+        self.log_file_path = r"D:\chat-log\log.txt"  # 日志文件路径
     
     def _register_tools(self):
         """注册可用工具"""
@@ -149,6 +159,23 @@ class ChatCompressClient:
                         "required": ["url"]
                     }
                 }
+            },
+            {
+                "type": "function",
+                "function": {
+                    "name": "search_chat_history",
+                    "description": "搜索聊天历史记录。**重要提示：聊天记录已自动保存在 D:\\chat-log\\log.txt 文件中，请直接使用本工具搜索，不要使用 list_directory 或 read_file 工具查找文件。**\n\n功能：读取 D:\\chat-log\\log.txt 文件，根据用户查询返回相关的历史记录（每5轮对话会自动提取5W关键信息并保存）。\n\n适用场景：\n1. 用户想要查找之前的对话内容\n2. 用户询问“我之前说过什么”、“之前聊过什么”、“第一条历史记录”\n3. 用户想回忆某个话题的讨论内容\n4. 用户需要查看聊天历史总结\n\n使用示例：\n- 用户问“查找聊天历史” → 调用 search_chat_history(query=“查找聊天历史”)\n- 用户问“我之前说过篮球吗” → 调用 search_chat_history(query=“篮球”)\n- 用户问“第一条历史记录是什么” → 调用 search_chat_history(query=“第一条历史”)\n\n**重要：** 收到工具返回的结果后，请仔细阅读 content 字段中的完整内容。即使记录中只有【记录时间】和【对话轮次】信息（没有5W详细信息），也要将这些信息完整地呈现给用户。如果包含5W信息（Who、What、When、Where、Why），请用自然语言总结；如果只有基本信息，就直接告知用户这些基本信息。不要忽略任何返回的内容。",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {
+                            "query": {
+                                "type": "string",
+                                "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
+                            }
+                        },
+                        "required": ["query"]
+                    }
+                }
             }
         ]
         return tools_list
@@ -182,6 +209,10 @@ class ChatCompressClient:
         elif tool_name == "curl":
             return tools.curl(
                 tool_args.get("url")
+            )
+        elif tool_name == "search_chat_history":
+            return tools.search_chat_history(
+                tool_args.get("query")
             )
         return {"error": f"未知工具: {tool_name}"}
     
@@ -234,6 +265,16 @@ class ChatCompressClient:
     
     def _should_compress(self):
         """检查是否需要压缩聊天记录"""
+        # 优先检查全局自动压缩开关
+        if not self.auto_compress_enabled:
+            return False
+        
+        # 检查单次跳过标志
+        if self.skip_next_compress:
+            self.skip_next_compress = False  # 重置标志
+            print("\n[压缩跳过] 用户选择跳过本次压缩")
+            return False
+        
         rounds = self._count_rounds()
         context_tokens = self._get_context_tokens()
         
@@ -287,10 +328,10 @@ class ChatCompressClient:
         summary = self._summarize_conversation(compress_text)
         
         if summary:
-            # 创建压缩后的摘要消息
+            # 创建压缩后的摘要消息（改为 user 角色，避免连续 system 导致 Jinja 模板错误）
             compressed_message = {
-                'role': 'system',
-                'content': f"【历史对话摘要】\n{summary}\n\n【说明】以上是之前对话的摘要，以下是最近的对话内容："
+                'role': 'user',
+                'content': f"【之前的对话摘要】\n{summary}\n\n请基于以上背景继续对话。"
             }
             
             # 更新聊天历史：摘要 + 保留的最近消息
@@ -300,6 +341,42 @@ class ChatCompressClient:
             print(f"[压缩效果] 保留了最近{keep_count}条原始消息")
         else:
             print("[压缩失败] LLM总结失败，保持原聊天记录")
+    
+    def _clean_message_sequence(self, messages):
+        """清理消息序列，避免连续相同角色的消息导致 LM Studio Jinja 模板错误
+        
+        LM Studio 要求：
+        1. 不能有两个连续的 system 消息
+        2. 不能有两个连续的 user 消息  
+        3. 不能有两个连续的 assistant 消息
+        
+        处理策略：合并连续的同角色消息
+        """
+        if not messages:
+            return []
+        
+        cleaned = []
+        
+        for msg in messages:
+            role = msg.get('role')
+            
+            # 跳过空的 system 消息
+            if role == 'system' and not msg.get('content', '').strip():
+                continue
+            
+            # 如果当前消息与前一个消息角色相同
+            if cleaned and cleaned[-1].get('role') == role:
+                if role in ['user', 'assistant', 'system']:
+                    # 合并连续的同角色消息
+                    prev_content = cleaned[-1].get('content', '')
+                    curr_content = msg.get('content', '')
+                    cleaned[-1]['content'] = prev_content + '\n\n' + curr_content
+                    print(f"[消息清理] 合并两个连续的 {role} 消息")
+            else:
+                # 创建消息的副本，避免修改原始数据
+                cleaned.append(msg.copy())
+        
+        return cleaned
     
     def _summarize_conversation(self, conversation_text):
         """调用LLM对对话内容进行总结"""
@@ -492,11 +569,14 @@ class ChatCompressClient:
         if self.token:
             headers['Authorization'] = f'Bearer {self.token}'
         
+        # 清理消息序列，避免连续相同角色的消息导致 Jinja 模板错误
+        cleaned_history = self._clean_message_sequence(self.chat_history)
+        
         data = {
             'model': self.model,
             'messages': [
                 {'role': 'system', 'content': '你是一个友好的AI助手，具有文件操作能力。当用户需要进行文件操作时，请使用工具调用格式。'},
-                *self.chat_history,
+                *cleaned_history,
                 {'role': 'user', 'content': prompt}
             ],
             'tools': self.tools,
@@ -771,6 +851,302 @@ class ChatCompressClient:
         print(f"  压缩阈值: {self.max_rounds} 轮 或 {self.max_context_tokens} tokens")
         print()
     
+    def _show_compress_settings(self):
+        """显示压缩相关设置"""
+        print("\n[压缩设置]")
+        print(f"  自动压缩: {'✅ 启用' if self.auto_compress_enabled else '❌ 禁用'}")
+        print(f"  下次跳过: {'是' if self.skip_next_compress else '否'}")
+        print(f"  轮数阈值: {self.max_rounds} 轮")
+        print(f"\n[可用命令]")
+        print(f"  skip_compress / 跳过压缩  - 跳过下次自动压缩")
+        print(f"  enable_compress / 启用压缩 - 启用自动压缩")
+        print(f"  disable_compress / 禁用压缩 - 禁用自动压缩")
+        print(f"  compress_settings / 压缩设置 - 显示此信息")
+        print()
+    
+    def _check_and_extract_key_info(self):
+        """检查是否需要提取关键信息，并在满足条件时执行"""
+        
+        # 检查是否全局禁用
+        if not self.auto_extract_enabled:
+            return
+        
+        # 检查是否单次跳过
+        if self.skip_next_extract:
+            self.skip_next_extract = False
+            print("[关键信息提取] 用户跳过本次提取")
+            return
+        
+        # 计算当前对话轮数
+        rounds = len(self.chat_history) // 2
+        
+        # 每 extract_interval 轮对话触发一次
+        if rounds > 0 and rounds % self.extract_interval == 0:
+            print(f"\n[关键信息提取] 检测到第{rounds}轮对话，开始提取关键信息...")
+            self._extract_5w_info()
+    
+    def _extract_5w_info(self):
+        """执行 5W 关键信息提取"""
+        
+        # 获取最近的对话历史（最近 extract_interval * 2 条消息）
+        recent_messages = self.chat_history[-(self.extract_interval * 2):]
+        
+        # 构建提取提示词
+        extract_prompt = self._build_extract_prompt(recent_messages)
+        
+        # 调用 LLM 进行提取
+        print("[关键信息提取] 正在调用 LLM...")
+        response_data = self._send_extract_request(
+            extract_prompt, 
+            max_tokens=512,  # 5W 结果不需要太多 token
+            temperature=0.3
+        )
+        
+        # 解析响应
+        extracted_info = self._parse_extraction_response(response_data)
+        
+        if extracted_info:
+            print("[关键信息提取] 提取成功:")
+            print(extracted_info)
+            
+            # 保存到文件
+            success = self._save_to_log_file(extracted_info, len(self.chat_history) // 2)
+            
+            if success:
+                print("[关键信息提取] ✅ 完成")
+            else:
+                print("[关键信息提取] ⚠️ 保存失败")
+        else:
+            print("[关键信息提取] ❌ 提取失败")
+    
+    def _build_extract_prompt(self, recent_messages):
+        """构建 5W 信息提取的提示词"""
+        
+        # 格式化对话历史
+        conversation_text = ""
+        for i, msg in enumerate(recent_messages, 1):
+            role = "用户" if msg['role'] == 'user' else "AI助手"
+            content = msg.get('content', '')
+            if isinstance(content, list):
+                content = str(content)
+            conversation_text += f"{i}. {role}: {content}\n"
+        
+        prompt = f"""请分析以下对话内容，按照 5W 规则提取关键信息。
+
+【对话内容】（共{len(recent_messages)}条消息）
+{conversation_text}
+
+【提取要求】
+请严格按照以下格式输出，每个字段一行：
+- Who: [参与者姓名或角色，如果没有明确提及则写“未提及”]
+- What: [发生的主要事件或讨论的核心话题，用一句话概括]
+- When: [具体时间或时间段，如果没有则写“未提及”]
+- Where: [地点或场所，如果没有则写“未提及”]
+- Why: [原因、目的或动机，如果没有则写“未提及”]
+
+【重要注意事项】
+1. 必须分析所有对话内容，不能遗漏任何一条消息
+2. 只提取对话中明确提到的信息，不要推测
+3. 保持简洁，每个字段不超过 30 字
+4. 如果某个信息在对话中出现多次，提取最重要的那个
+5. 使用中文输出
+6. 直接输出 5W 结果，不要输出任何思考过程、分析步骤或额外说明
+7. 不要在输出中包含 "Thinking Process"、"分析"、"首先"、"Let" 等字样
+8. 输出格式必须完全按照下面的示例，不要添加任何 Markdown 格式
+
+【输出示例】
+- Who: 张三
+- What: 用户进行自我介绍
+- When: 未提及
+- Where: 北京
+- Why: 寻求助手协助
+
+【开始提取】"""
+
+        return prompt
+    
+    def _send_extract_request(self, prompt, max_tokens=256, temperature=0.3):
+        """发送提取请求到 LLM"""
+        try:
+            if self.base_url.startswith('https://'):
+                conn = http.client.HTTPSConnection(self.host)
+            else:
+                conn = http.client.HTTPConnection(self.host)
+            
+            headers = {
+                'Content-Type': 'application/json'
+            }
+            if self.token:
+                headers['Authorization'] = f'Bearer {self.token}'
+            
+            data = {
+                'model': self.model,
+                'messages': [
+                    {'role': 'system', 'content': '你是一个专业的信息提取助手。'},
+                    {'role': 'user', 'content': prompt}
+                ],
+                'max_tokens': max_tokens,
+                'temperature': temperature,
+                'stream': False
+            }
+            
+            conn.request('POST', f'{self.path}/chat/completions', json.dumps(data), headers)
+            response = conn.getresponse()
+            response_data = json.loads(response.read().decode())
+            conn.close()
+            
+            return response_data
+            
+        except Exception as e:
+            print(f"[提取请求错误] {str(e)}")
+            return None
+    
+    def _parse_extraction_response(self, response_data):
+        """解析 LLM 返回的提取结果"""
+        
+        if response_data is None:
+            return None
+        
+        if 'choices' not in response_data or len(response_data['choices']) == 0:
+            return None
+        
+        choice = response_data['choices'][0]
+        message = choice.get('message', {})
+        
+        # 优先使用 content 字段（最终结果），而不是 reasoning_content（思考过程）
+        content = message.get('content', '').strip()
+        
+        # 如果 content 为空，才尝试从 reasoning_content 提取
+        if not content:
+            print("[解析] content 为空，尝试从 reasoning_content 提取...")
+            reasoning_content = message.get('reasoning_content', '')
+            
+            if reasoning_content:
+                # 从 reasoning_content 中提取最后的 5W 结果
+                # 方法1：查找 "- Who:" 开始的位置
+                who_match = re.search(r'-\s*Who:', reasoning_content)
+                if who_match:
+                    content = reasoning_content[who_match.start():].strip()
+                    print(f"[解析] 从 reasoning_content 提取到 5W 结果")
+                
+                # 方法2：如果没有找到，提取最后几行
+                if not content:
+                    lines = reasoning_content.strip().split('\n')
+                    # 取最后 5 行（假设是 5W 结果）
+                    content = '\n'.join(lines[-5:]).strip()
+                    print(f"[解析] 从 reasoning_content 最后 5 行提取")
+        
+        if not content:
+            delta = choice.get('delta', {})
+            content = delta.get('content', '').strip()
+        
+        if not content:
+            print("[解析错误] 无法从响应中提取内容")
+            return None
+        
+        # 验证是否包含 5W 关键字段
+        required_keywords = ['Who', 'What']
+        has_required = any(keyword in content for keyword in required_keywords)
+        
+        if has_required:
+            print(f"[解析成功] 提取到 {len(content)} 字符的 5W 结果")
+            return content
+        else:
+            print("[解析警告] 返回内容不符合 5W 格式")
+            print(f"[调试] 返回内容前200字符: {content[:200]}")
+            return None
+    
+    def _save_to_log_file(self, extracted_info, round_number):
+        """将提取的信息保存到日志文件（增量更新）"""
+        
+        log_dir = os.path.dirname(self.log_file_path)
+        
+        try:
+            # 检查是否包含5W关键字段
+            if not re.search(r'-\s*(Who|What|When|Where|Why):', extracted_info):
+                print("[日志警告] 提取内容不包含5W信息，跳过保存")
+                return False
+            
+            # 如果目录不存在，创建目录
+            if not os.path.exists(log_dir):
+                os.makedirs(log_dir)
+                print(f"[日志保存] 创建目录: {log_dir}")
+            
+            # 获取当前时间戳
+            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            
+            # 清理内容（移除 Thinking Process）
+            clean_content = self._clean_extraction_content(extracted_info)
+            
+            # 格式化日志条目
+            log_entry = f"\n{'='*60}\n"
+            log_entry += f"【记录时间】{timestamp}\n"
+            log_entry += f"【对话轮次】第 {round_number} 轮\n"
+            log_entry += f"{'='*60}\n"
+            log_entry += clean_content
+            log_entry += f"\n{'='*60}\n"
+            
+            # 追加写入文件
+            with open(self.log_file_path, 'a', encoding='utf-8') as f:
+                f.write(log_entry)
+            
+            print(f"[日志保存] 成功保存到: {self.log_file_path}")
+            return True
+            
+        except Exception as e:
+            print(f"[日志保存] 错误: {str(e)}")
+            return False
+    
+    def _clean_extraction_content(self, content):
+        """清理提取内容，移除 Thinking Process，只保留5W部分"""
+        if not content:
+            return content
+        
+        # 查找 - Who: 开始的位置
+        who_match = re.search(r'-\s*Who:', content)
+        if who_match:
+            # 只保留从 - Who: 开始的内容
+            clean_content = content[who_match.start():].strip()
+            return clean_content
+        
+        # 如果找不到 - Who:，尝试移除常见的思考过程标记
+        thinking_markers = [
+            'Thinking Process:',
+            '思考过程',
+            '分析过程',
+            'Let me think',
+            'First,',
+            'Second,',
+            'Finally,'
+        ]
+        
+        for marker in thinking_markers:
+            if marker in content:
+                # 找到标记后，尝试提取后面的内容
+                parts = content.split(marker, 1)
+                if len(parts) > 1:
+                    remaining = parts[1].strip()
+                    # 检查剩余内容是否包含5W
+                    if re.search(r'-\s*(Who|What|When|Where|Why):', remaining):
+                        return remaining.strip()
+        
+        # 如果都没有匹配，返回原始内容
+        return content
+    
+    def _show_extract_settings(self):
+        """显示关键信息提取相关设置"""
+        print("\n[关键信息提取设置]")
+        print(f"  自动提取: {'✅ 启用' if self.auto_extract_enabled else '❌ 禁用'}")
+        print(f"  下次跳过: {'是' if self.skip_next_extract else '否'}")
+        print(f"  提取频率: 每 {self.extract_interval} 轮对话")
+        print(f"  日志路径: {self.log_file_path}")
+        print(f"\n[可用命令]")
+        print(f"  skip_extract / 跳过提取   - 跳过下次提取")
+        print(f"  enable_extract / 启用提取  - 启用自动提取")
+        print(f"  disable_extract / 禁用提取 - 禁用自动提取")
+        print(f"  extract_settings / 提取设置 - 显示此信息")
+        print()
+    
     def run(self):
         """运行交互式聊天界面"""
         print("=" * 60)
@@ -790,6 +1166,13 @@ class ChatCompressClient:
         print("  clear     - 清空聊天历史")
         print("  debug     - 切换调试模式")
         print("  stats     - 显示聊天统计信息")
+        print("  skip_compress / 跳过压缩 - 跳过下次自动压缩")
+        print("  enable_compress / 启用压缩 - 启用自动压缩")
+        print("  disable_compress / 禁用压缩 - 禁用自动压缩")
+        print("  compress_settings / 压缩设置 - 显示压缩设置")
+        print("  skip_extract / 跳过提取   - 跳过下次关键信息提取")
+        print("  disable_extract / 禁用提取 - 禁用自动提取")
+        print("  extract_settings / 提取设置 - 查看提取设置")
         print("  按 Ctrl+C 随时退出")
         print("=" * 60)
         print()
@@ -821,6 +1204,79 @@ class ChatCompressClient:
                     self.show_history_stats()
                     continue
                 
+                # 处理压缩控制命令
+                if user_input.lower() in ['skip_compress', '跳过压缩']:
+                    self.skip_next_compress = True
+                    print("[设置] 下次将跳过自动压缩")
+                    continue
+                
+                if user_input.lower() in ['enable_compress', '启用压缩']:
+                    self.auto_compress_enabled = True
+                    self.skip_next_compress = False
+                    print("[设置] 已启用自动压缩")
+                    continue
+                
+                if user_input.lower() in ['disable_compress', '禁用压缩']:
+                    self.auto_compress_enabled = False
+                    print("[设置] 已禁用自动压缩")
+                    continue
+                
+                if user_input.lower() in ['compress_settings', '压缩设置']:
+                    self._show_compress_settings()
+                    continue
+                
+                # 处理关键信息提取控制命令
+                if user_input.lower() in ['skip_extract', '跳过提取']:
+                    self.skip_next_extract = True
+                    print("[设置] 下次将跳过关键信息提取")
+                    continue
+                
+                if user_input.lower() in ['enable_extract', '启用提取']:
+                    self.auto_extract_enabled = True
+                    self.skip_next_extract = False
+                    print("[设置] 已启用自动提取")
+                    continue
+                
+                if user_input.lower() in ['disable_extract', '禁用提取']:
+                    self.auto_extract_enabled = False
+                    print("[设置] 已禁用自动提取")
+                    continue
+                
+                if user_input.lower() in ['extract_settings', '提取设置']:
+                    self._show_extract_settings()
+                    continue
+                
+                # ========== 处理 /search 命令 ==========
+                if user_input.startswith('/search'):
+                    # 提取搜索关键词
+                    query = user_input[7:].strip()  # 去掉 '/search' 前缀
+                    if not query:
+                        query = "查找聊天历史"  # 默认查询
+                    
+                    print(f"\n{'='*60}")
+                    print(f"[搜索命令] 搜索关键词: {query}")
+                    print(f"{'='*60}")
+                    
+                    # 直接调用工具
+                    result = tools.search_chat_history(query)
+                    
+                    # 显示结果
+                    if result.get('success'):
+                        print(f"\n[搜索结果] {result.get('message')}")
+                        if result.get('content'):
+                            content = result.get('content')
+                            # 清理内容（移除 Thinking Process）
+                            clean_content = self._clean_extraction_content(content)
+                            print(clean_content)
+                        print(f"\n{'='*60}")
+                    else:
+                        print(f"\n[搜索失败] {result.get('message', result.get('error'))}")
+                        if result.get('suggestion'):
+                            print(f"[建议] {result.get('suggestion')}")
+                        print(f"\n{'='*60}")
+                    
+                    continue  # 不继续处理为普通对话
+                
                 self.add_to_history('user', user_input)
                 
                 print("AI: ", end='', flush=True)
@@ -829,6 +1285,9 @@ class ChatCompressClient:
                 if response:
                     self.add_to_history('assistant', response)
                     print(f"[耗时: {time_taken:.2f}秒]")
+                    
+                    # 检查是否需要提取关键信息
+                    self._check_and_extract_key_info()
                 else:
                     print("\n抱歉，模型没有返回有效内容。")
                     self.chat_history.pop()

@@ -272,6 +272,169 @@ class Tools:
             return {"error": f"HTTP错误: {e.code} - {e.reason}"}
         except Exception as e:
             return {"error": f"执行错误: {str(e)}"}
+    
+    def _clean_extraction_content(self, content):
+        """清理提取内容，移除 Thinking Process，保留5W部分和基本信息"""
+        if not content:
+            return content
+        
+        # 先提取基本信息（记录时间和对话轮次）
+        basic_info = []
+        time_match = re.search(r'【记录时间】.*', content)
+        round_match = re.search(r'【对话轮次】.*', content)
+        if time_match:
+            basic_info.append(time_match.group(0))
+        if round_match:
+            basic_info.append(round_match.group(0))
+        
+        # 查找 - Who: 开始的位置
+        who_match = re.search(r'-\s*Who:', content)
+        if who_match:
+            # 保留基本信息 + 5W内容
+            five_w_content = content[who_match.start():].strip()
+            if basic_info:
+                return '\n'.join(basic_info) + '\n' + five_w_content
+            return five_w_content
+        
+        # 如果找不到 - Who:，尝试移除常见的思考过程标记
+        thinking_markers = [
+            'Thinking Process:',
+            '思考过程',
+            '分析过程',
+            'Let me think',
+            'First,',
+            'Second,',
+            'Finally,'
+        ]
+        
+        for marker in thinking_markers:
+            if marker in content:
+                # 找到标记后，尝试提取后面的内容
+                parts = content.split(marker, 1)
+                if len(parts) > 1:
+                    remaining = parts[1].strip()
+                    # 检查剩余内容是否包含5W
+                    if re.search(r'-\s*(Who|What|When|Where|Why):', remaining):
+                        if basic_info:
+                            return '\n'.join(basic_info) + '\n' + remaining.strip()
+                        return remaining.strip()
+        
+        # 如果都没有匹配，返回原始内容（至少保留基本信息）
+        if basic_info:
+            return '\n'.join(basic_info)
+        return content
+    
+    def search_chat_history(self, query):
+        """搜索聊天历史记录，查找与查询相关的历史对话信息"""
+        try:
+            # 检查参数
+            if not query:
+                return {"error": "缺少查询参数，请提供搜索关键词"}
+            
+            log_file_path = r"D:\chat-log\log.txt"
+            
+            # 检查日志文件是否存在
+            if not os.path.exists(log_file_path):
+                return {
+                    "success": False,
+                    "message": "聊天记录文件不存在",
+                    "details": f"文件路径: {log_file_path}",
+                    "suggestion": "聊天记录尚未生成。请先进行至少5轮对话，系统会自动提取关键信息并保存。"
+                }
+            
+            # 读取日志文件内容
+            try:
+                with open(log_file_path, 'r', encoding='utf-8') as f:
+                    log_content = f.read()
+            except UnicodeDecodeError:
+                # 尝试其他编码
+                with open(log_file_path, 'r', encoding='gbk') as f:
+                    log_content = f.read()
+            
+            # 检查文件是否为空
+            if not log_content.strip():
+                return {
+                    "success": False,
+                    "message": "聊天记录为空",
+                    "details": "日志文件存在但没有内容",
+                    "suggestion": "请先进行至少5轮对话，系统会自动提取关键信息并保存。"
+                }
+            
+            # 统计记录条数
+            record_count = log_content.count('【记录时间】')
+            
+            # 按记录分割
+            records = log_content.split('\n============================================================')
+            records = [r.strip() for r in records if r.strip()]
+            
+            # 清理每条记录的内容（移除 Thinking Process）
+            cleaned_records = []
+            for record in records:
+                clean_record = self._clean_extraction_content(record)
+                if clean_record:
+                    cleaned_records.append(clean_record)
+            records = cleaned_records
+            
+            # 检查是否包含序号关键词
+            target_records = []
+            target_message = ""
+            
+            if '第一条' in query or '第1条' in query or '最早' in query or '首次' in query:
+                # 返回第一条记录
+                if len(records) > 0:
+                    target_records = records[:1]
+                    target_message = f"找到 {record_count} 条历史记录，以下是第一条："
+                else:
+                    return {
+                        "success": False,
+                        "message": "没有找到任何历史记录",
+                        "total_records": 0
+                    }
+            elif '第二条' in query or '第2条' in query:
+                # 返回第二条记录
+                if len(records) > 1:
+                    target_records = records[1:2]
+                    target_message = f"找到 {record_count} 条历史记录，以下是第二条："
+                else:
+                    return {
+                        "success": False,
+                        "message": f"记录不足2条，当前只有 {len(records)} 条记录",
+                        "total_records": record_count
+                    }
+            elif '第三条' in query or '第3条' in query:
+                # 返回第三条记录
+                if len(records) > 2:
+                    target_records = records[2:3]
+                    target_message = f"找到 {record_count} 条历史记录，以下是第三条："
+                else:
+                    return {
+                        "success": False,
+                        "message": f"记录不足3条，当前只有 {len(records)} 条记录",
+                        "total_records": record_count
+                    }
+            else:
+                # 默认返回最近3条记录
+                target_records = records[-3:] if len(records) > 3 else records
+                target_message = f"找到 {record_count} 条历史记录，以下是最近的 {len(target_records)} 条："
+            
+            target_content = '\n'.join(target_records)
+            
+            return {
+                "success": True,
+                "message": target_message,
+                "total_records": record_count,
+                "returned_records": len(target_records),
+                "content": target_content
+            }
+        
+        except FileNotFoundError:
+            return {
+                "error": "聊天记录文件不存在",
+                "details": f"文件路径: {log_file_path}",
+                "suggestion": "请先进行至少5轮对话，系统会自动提取关键信息并保存。"
+            }
+        except Exception as e:
+            return {"error": f"搜索执行错误: {str(e)}"}
 
 # 工具实例
 tools = Tools()

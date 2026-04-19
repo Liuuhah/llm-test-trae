@@ -164,7 +164,7 @@ class ChatCompressClient:
                 "type": "function",
                 "function": {
                     "name": "search_chat_history",
-                    "description": "搜索聊天历史记录。**重要提示：聊天记录已自动保存在 D:\\chat-log\\log.txt 文件中，请直接使用本工具搜索，不要使用 list_directory 或 read_file 工具查找文件。**\n\n功能：读取 D:\\chat-log\\log.txt 文件，根据用户查询返回相关的历史记录（每5轮对话会自动提取5W关键信息并保存）。\n\n适用场景：\n1. 用户想要查找之前的对话内容\n2. 用户询问“我之前说过什么”、“之前聊过什么”、“第一条历史记录”\n3. 用户想回忆某个话题的讨论内容\n4. 用户需要查看聊天历史总结\n\n使用示例：\n- 用户问“查找聊天历史” → 调用 search_chat_history(query=“查找聊天历史”)\n- 用户问“我之前说过篮球吗” → 调用 search_chat_history(query=“篮球”)\n- 用户问“第一条历史记录是什么” → 调用 search_chat_history(query=“第一条历史”)\n\n**重要：** 收到工具返回的结果后，请仔细阅读 content 字段中的完整内容。即使记录中只有【记录时间】和【对话轮次】信息（没有5W详细信息），也要将这些信息完整地呈现给用户。如果包含5W信息（Who、What、When、Where、Why），请用自然语言总结；如果只有基本信息，就直接告知用户这些基本信息。不要忽略任何返回的内容。",
+                    "description": "搜索聊天历史记录。**重要提示：聊天记录已自动保存在 D:\\chat-log\\log.txt 文件中，请直接使用本工具搜索，不要使用 list_directory 或 read_file 工具查找文件。**\n\n功能：读取 D:\\chat-log\\log.txt 文件，根据用户查询返回相关的历史记录（每5轮对话会自动提取关键信息并保存）。\n\n适用场景：\n1. 用户想要查找之前的对话内容\n2. 用户询问“我之前说过什么”、“之前聊过什么”、“第一条历史记录”\n3. 用户想回忆某个话题的讨论内容\n4. 用户需要查看聊天历史总结\n\n使用示例：\n- 用户问“查找聊天历史” → 调用 search_chat_history(query=“查找聊天历史”)\n- 用户问“我之前说过篮球吗” → 调用 search_chat_history(query=“篮球”)\n- 用户问“第一条历史记录是什么” → 调用 search_chat_history(query=“第一条历史”)\n\n**重要：** 收到工具返回的结果后，请仔细阅读 content 字段中的完整内容。\n\ncontent 字段可能包含两部分信息：\n1. **对话上下文**（Analyze the Dialogue Content）：记录了用户和AI的每一轮对话内容，包括用户的原始发言\n2. **5W提取结果**：Who（谁）、What（做了什么）、When（何时）、Where（何地）、Why（为什么）\n\n请根据这些信息为用户生成一个完整、易懂的总结：\n- 如果包含对话上下文，请提取用户提到的关键信息（如姓名、爱好、职业、学校等）\n- 如果包含5W信息，请用自然语言总结\n- 不要只是简单转发原始数据，要理解内容后用自己的话总结\n- 使用条理清晰的格式（如列表）呈现给用户\n\n**示例：**\n用户问：“帮我查找第一条历史记录”\n你应该回答：\n“根据第一条历史记录，您在对话中提到：\n1. 您来自成都东软学院\n2. 您姓刘\n3. 您爱好打篮球，担任中锋位置\n4. 您是男生\n\n这是您与助手的初次对话记录，主要是在进行自我介绍。”",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -1062,8 +1062,8 @@ class ChatCompressClient:
         log_dir = os.path.dirname(self.log_file_path)
         
         try:
-            # 检查是否包含5W关键字段
-            if not re.search(r'-\s*(Who|What|When|Where|Why):', extracted_info):
+            # 检查是否包含5W关键字段（支持两种格式：- Who: 和 Who:）
+            if not re.search(r'(?:^|\n)\s*(?:-\s*)?(Who|What|When|Where|Why):', extracted_info, re.MULTILINE):
                 print("[日志警告] 提取内容不包含5W信息，跳过保存")
                 return False
             
@@ -1098,18 +1098,39 @@ class ChatCompressClient:
             return False
     
     def _clean_extraction_content(self, content):
-        """清理提取内容，移除 Thinking Process，只保留5W部分"""
+        """清理提取内容，移除冗余思考过程，保留对话上下文和5W结果"""
         if not content:
             return content
         
-        # 查找 - Who: 开始的位置
-        who_match = re.search(r'-\s*Who:', content)
-        if who_match:
-            # 只保留从 - Who: 开始的内容
-            clean_content = content[who_match.start():].strip()
+        # 查找 "Analyze the Dialogue Content" 或 "Analyze the Dialogue" 的位置
+        # 支持格式：2. **Analyze the Dialogue:** 或 2. **Analyze the Dialogue Content:**
+        dialogue_match = re.search(r'\d+\.\s*\*{0,2}Analyze the Dialogue(?: Content)?\*{0,2}:', content)
+        
+        # 查找标准格式的 5W 结果（在行首，带 - 前缀或不带）
+        # 排除 **Who:** 这种 Markdown 格式
+        five_w_match = re.search(r'(?:^|\n)\s*-\s*(Who|What|When|Where|Why):', content, re.MULTILINE)
+        
+        # 如果没有找到带 - 的格式，尝试找不带 - 的格式（但要确保是在行首）
+        if not five_w_match:
+            five_w_match = re.search(r'(?:^|\n)(Who|What|When|Where|Why):', content, re.MULTILINE)
+        
+        if dialogue_match and five_w_match:
+            # 两者都存在，保留从对话分析开始到结尾的所有内容
+            start_pos = dialogue_match.start()
+            clean_content = content[start_pos:].strip()
+            return clean_content
+        elif five_w_match:
+            # 只有5W结果，保留5W部分
+            start_pos = five_w_match.start()
+            clean_content = content[start_pos:].strip()
+            return clean_content
+        elif dialogue_match:
+            # 只有对话分析，保留对话分析部分
+            start_pos = dialogue_match.start()
+            clean_content = content[start_pos:].strip()
             return clean_content
         
-        # 如果找不到 - Who:，尝试移除常见的思考过程标记
+        # 如果都没有匹配，尝试移除常见的思考过程标记
         thinking_markers = [
             'Thinking Process:',
             '思考过程',
@@ -1122,12 +1143,11 @@ class ChatCompressClient:
         
         for marker in thinking_markers:
             if marker in content:
-                # 找到标记后，尝试提取后面的内容
                 parts = content.split(marker, 1)
                 if len(parts) > 1:
                     remaining = parts[1].strip()
-                    # 检查剩余内容是否包含5W
-                    if re.search(r'-\s*(Who|What|When|Where|Why):', remaining):
+                    # 检查剩余内容是否包含有用信息
+                    if remaining and len(remaining) > 50:
                         return remaining.strip()
         
         # 如果都没有匹配，返回原始内容

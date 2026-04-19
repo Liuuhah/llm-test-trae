@@ -274,29 +274,39 @@ class Tools:
             return {"error": f"执行错误: {str(e)}"}
     
     def _clean_extraction_content(self, content):
-        """清理提取内容，移除 Thinking Process，保留5W部分和基本信息"""
+        """清理提取内容，移除冗余思考过程，保留对话上下文和5W结果"""
         if not content:
             return content
         
-        # 先提取基本信息（记录时间和对话轮次）
-        basic_info = []
-        time_match = re.search(r'【记录时间】.*', content)
-        round_match = re.search(r'【对话轮次】.*', content)
-        if time_match:
-            basic_info.append(time_match.group(0))
-        if round_match:
-            basic_info.append(round_match.group(0))
+        # 查找 "Analyze the Dialogue Content" 或 "Analyze the Dialogue" 的位置
+        # 支持格式：2. **Analyze the Dialogue:** 或 2. **Analyze the Dialogue Content:**
+        dialogue_match = re.search(r'\d+\.\s*\*{0,2}Analyze the Dialogue(?: Content)?\*{0,2}:', content)
         
-        # 查找 - Who: 开始的位置
-        who_match = re.search(r'-\s*Who:', content)
-        if who_match:
-            # 保留基本信息 + 5W内容
-            five_w_content = content[who_match.start():].strip()
-            if basic_info:
-                return '\n'.join(basic_info) + '\n' + five_w_content
-            return five_w_content
+        # 查找标准格式的 5W 结果（在行首，带 - 前缀或不带）
+        # 排除 **Who:** 这种 Markdown 格式
+        five_w_match = re.search(r'(?:^|\n)\s*-\s*(Who|What|When|Where|Why):', content, re.MULTILINE)
         
-        # 如果找不到 - Who:，尝试移除常见的思考过程标记
+        # 如果没有找到带 - 的格式，尝试找不带 - 的格式（但要确保是在行首）
+        if not five_w_match:
+            five_w_match = re.search(r'(?:^|\n)(Who|What|When|Where|Why):', content, re.MULTILINE)
+        
+        if dialogue_match and five_w_match:
+            # 两者都存在，保留从对话分析开始到结尾的所有内容
+            start_pos = dialogue_match.start()
+            clean_content = content[start_pos:].strip()
+            return clean_content
+        elif five_w_match:
+            # 只有5W结果，保留5W部分
+            start_pos = five_w_match.start()
+            clean_content = content[start_pos:].strip()
+            return clean_content
+        elif dialogue_match:
+            # 只有对话分析，保留对话分析部分
+            start_pos = dialogue_match.start()
+            clean_content = content[start_pos:].strip()
+            return clean_content
+        
+        # 如果都没有匹配，尝试移除常见的思考过程标记
         thinking_markers = [
             'Thinking Process:',
             '思考过程',
@@ -309,19 +319,14 @@ class Tools:
         
         for marker in thinking_markers:
             if marker in content:
-                # 找到标记后，尝试提取后面的内容
                 parts = content.split(marker, 1)
                 if len(parts) > 1:
                     remaining = parts[1].strip()
-                    # 检查剩余内容是否包含5W
-                    if re.search(r'-\s*(Who|What|When|Where|Why):', remaining):
-                        if basic_info:
-                            return '\n'.join(basic_info) + '\n' + remaining.strip()
+                    # 检查剩余内容是否包含有用信息
+                    if remaining and len(remaining) > 50:
                         return remaining.strip()
         
-        # 如果都没有匹配，返回原始内容（至少保留基本信息）
-        if basic_info:
-            return '\n'.join(basic_info)
+        # 如果都没有匹配，返回原始内容
         return content
     
     def search_chat_history(self, query):
@@ -363,9 +368,29 @@ class Tools:
             # 统计记录条数
             record_count = log_content.count('【记录时间】')
             
-            # 按记录分割
-            records = log_content.split('\n============================================================')
-            records = [r.strip() for r in records if r.strip()]
+            # 按记录分割：以 【记录时间】 为标记分割
+            records = []
+            current_record = []
+            
+            for line in log_content.split('\n'):
+                if '【记录时间】' in line:
+                    # 新记录开始
+                    if current_record:
+                        records.append('\n'.join(current_record).strip())
+                    current_record = []
+                current_record.append(line)
+            
+            # 添加最后一条记录
+            if current_record:
+                records.append('\n'.join(current_record).strip())
+            
+            # 过滤空记录
+            records = [r for r in records if r.strip() and '【记录时间】' in r]
+            
+            # 调试日志
+            print(f"[调试] 分割后得到 {len(records)} 条记录")
+            for idx, record in enumerate(records):
+                print(f"[调试] 记录{idx+1} 前100字符: {record[:100]}")
             
             # 清理每条记录的内容（移除 Thinking Process）
             cleaned_records = []

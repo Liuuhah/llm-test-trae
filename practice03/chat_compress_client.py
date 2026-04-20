@@ -414,7 +414,7 @@ class ChatCompressClient:
                     {'role': 'system', 'content': '你是一个专业的对话总结助手。请直接输出总结内容，不要输出任何思考过程。'},
                     {'role': 'user', 'content': prompt}
                 ],
-                'max_tokens': 262144,
+                'max_tokens': 512,
                 'temperature': 0.3,
                 'stream': False
             }
@@ -522,7 +522,7 @@ class ChatCompressClient:
             print(traceback.format_exc())
             return None
     
-    def send_request_stream(self, prompt, max_tokens=262144, debug=False):
+    def send_request_stream(self, prompt, max_tokens=4096, debug=False):
         """发送流式请求，实时输出回复内容（带自动压缩功能）"""
         # 在发送新请求前，检查是否需要压缩
         if self._should_compress():
@@ -558,6 +558,16 @@ class ChatCompressClient:
     
     def _send_single_stream(self, prompt, max_tokens, debug, is_first_round):
         """发送单次流式请求，返回(内容, 是否有工具调用)"""
+        if debug:
+            print(f"\n{'='*60}")
+            print(f"[调试] 开始发送流式请求")
+            print(f"[调试] 模型: {self.model}")
+            print(f"[调试] BASE_URL: {self.base_url}")
+            print(f"[调试] Host: {self.host}")
+            print(f"[调试] Path: {self.path}")
+            print(f"[调试] Token存在: {'是' if self.token else '否'}")
+            print(f"{'='*60}\n")
+        
         if self.base_url.startswith('https://'):
             conn = http.client.HTTPSConnection(self.host)
         else:
@@ -568,6 +578,9 @@ class ChatCompressClient:
         }
         if self.token:
             headers['Authorization'] = f'Bearer {self.token}'
+        
+        if debug:
+            print(f"[调试] 请求头: {headers}")
         
         # 清理消息序列，避免连续相同角色的消息导致 Jinja 模板错误
         cleaned_history = self._clean_message_sequence(self.chat_history)
@@ -586,8 +599,40 @@ class ChatCompressClient:
             'stream': True
         }
         
-        conn.request('POST', f'{self.path}/chat/completions', json.dumps(data), headers)
-        response = conn.getresponse()
+        if debug:
+            print(f"[调试] 请求数据大小: {len(json.dumps(data))} 字节")
+            print(f"[调试] 消息数量: {len(data['messages'])}")
+            print(f"[调试] 是否使用流式: {data['stream']}")
+        
+        try:
+            if debug:
+                print(f"[调试] 正在发送请求到: {self.path}/chat/completions ...")
+            request_start = time.time()
+            conn.request('POST', f'{self.path}/chat/completions', json.dumps(data), headers)
+            response = conn.getresponse()
+            request_end = time.time()
+            
+            if debug:
+                print(f"[调试] 响应状态码: {response.status}")
+                print(f"[调试] 响应头: {dict(response.getheaders())}")
+                print(f"[调试] 请求耗时: {request_end - request_start:.2f}秒")
+            
+            if response.status != 200:
+                error_body = response.read().decode('utf-8', errors='ignore')
+                if debug:
+                    print(f"[调试] 错误响应体: {error_body[:500]}")
+                print(f"[错误] API返回非200状态码: {response.status}")
+                return "", False
+        
+        except Exception as e:
+            import traceback
+            print(f"[错误] 发送请求时发生异常!")
+            print(f"[错误] 异常类型: {type(e).__name__}")
+            print(f"[错误] 异常信息: {e}")
+            if debug:
+                print(f"[调试] 堆栈跟踪:")
+                print(traceback.format_exc())
+            return "", False
         
         full_content = ''
         buffer = ''
@@ -605,10 +650,17 @@ class ChatCompressClient:
             print(f"调试模式已启用，输出将保存到: {log_file}")
         
         try:
+            stream_start = time.time()
+            chunk_count = 0
+            
             while True:
                 chunk = response.read(1024)
                 if not chunk:
                     break
+                
+                chunk_count += 1
+                if debug and chunk_count <= 3:
+                    print(f"[调试] 收到第{chunk_count}个数据块，大小: {len(chunk)} 字节")
                 
                 buffer += chunk.decode('utf-8', errors='ignore')
                 
@@ -619,8 +671,17 @@ class ChatCompressClient:
                     if line.startswith('data: '):
                         json_str = line[6:].strip()
                         if json_str == '[DONE]':
+                            stream_end = time.time()
+                            if debug:
+                                print(f"\n[调试] 流式响应结束")
+                                print(f"[调试] 总共收到 {chunk_count} 个数据块")
+                                print(f"[调试] 流式读取耗时: {stream_end - stream_start:.2f}秒")
+                                print(f"[调试] 当前累计内容长度: {len(full_content)} 字符")
+                            
                             # 流式响应结束，检查并执行待处理的工具调用
                             if pending_tool_calls:
+                                if debug:
+                                    print(f"[调试] 检测到 {len(pending_tool_calls)} 个待执行的工具调用")
                                 for tool_call_data in pending_tool_calls:
                                     response_content = self._execute_pending_tool_call(
                                         tool_call_data, 
@@ -635,6 +696,8 @@ class ChatCompressClient:
                                 return tool_call_response if tool_call_response else full_content, True
                             else:
                                 # 没有工具调用，正常结束
+                                if debug:
+                                    print(f"[调试] 没有工具调用，返回正常响应")
                                 return full_content, False
                             continue
                         
@@ -646,6 +709,8 @@ class ChatCompressClient:
                                 
                                 # 检测工具调用请求
                                 if 'tool_calls' in delta:
+                                    if debug:
+                                        print(f"[调试] 检测到工具调用片段")
                                     for tc in delta['tool_calls']:
                                         index = tc.get('index', 0)
                                         
@@ -667,6 +732,8 @@ class ChatCompressClient:
                                         if 'function' in tc:
                                             if 'name' in tc['function']:
                                                 tool_calls_buffer[index]['function']['name'] = tc['function']['name']
+                                                if debug:
+                                                    print(f"[调试] 工具名称: {tc['function']['name']}")
                                             if 'arguments' in tc['function']:
                                                 # 累积arguments片段
                                                 tool_calls_buffer[index]['function']['arguments'] += tc['function']['arguments']
@@ -680,6 +747,8 @@ class ChatCompressClient:
                                                 
                                                 # 如果成功解析，说明参数完整，加入待执行队列
                                                 if tool_name:
+                                                    if debug:
+                                                        print(f"[调试] 工具参数解析成功，加入待执行队列")
                                                     pending_tool_calls.append({
                                                         'id': tool_calls_buffer[index]['id'],
                                                         'name': tool_name,
@@ -699,6 +768,9 @@ class ChatCompressClient:
                                         with open(log_file, 'a', encoding='utf-8') as f:
                                             f.write(content)
                         except json.JSONDecodeError as e:
+                            if debug:
+                                print(f"[调试] JSON解析失败: {e}")
+                                print(f"[调试] 失败的JSON字符串: {json_str[:200]}")
                             pass
                 
                 # 保留未处理的部分
@@ -709,11 +781,22 @@ class ChatCompressClient:
         except KeyboardInterrupt:
             print('\n\n用户中断')
             return full_content, False
+        except Exception as e:
+            import traceback
+            print(f"\n[错误] 读取流式响应时发生异常!")
+            print(f"[错误] 异常类型: {type(e).__name__}")
+            print(f"[错误] 异常信息: {e}")
+            if debug:
+                print(f"[调试] 堆栈跟踪:")
+                print(traceback.format_exc())
+            return full_content, False
         finally:
             conn.close()
         
         # 流结束后的兜底检查
         if pending_tool_calls:
+            if debug:
+                print(f"[调试] 流结束后检测到 {len(pending_tool_calls)} 个待执行的工具调用")
             for tool_call_data in pending_tool_calls:
                 response_content = self._execute_pending_tool_call(
                     tool_call_data, 
@@ -726,6 +809,8 @@ class ChatCompressClient:
                     tool_call_response = response_content
             return tool_call_response if tool_call_response else full_content, True
         
+        if debug:
+            print(f"[调试] 流式请求完成，返回内容长度: {len(full_content)}")
         return full_content, False
     
     def _execute_pending_tool_call(self, tool_call_data, data, conn, headers, prompt):
@@ -1299,9 +1384,22 @@ class ChatCompressClient:
                 
                 self.add_to_history('user', user_input)
                 
-                print("AI: ", end='', flush=True)
+                print("\nAI: ", end='', flush=True)
+                if debug_mode:
+                    print(f"\n[调试] 准备调用 send_request_stream...")
+                    print(f"[调试] 用户输入长度: {len(user_input)} 字符")
+                    print(f"[调试] 当前聊天历史条数: {len(self.chat_history)}")
+                
                 response, time_taken = self.send_request_stream(user_input, debug=debug_mode)
                 
+                if debug_mode:
+                    print(f"\n[调试] send_request_stream 返回")
+                    print(f"[调试] response 类型: {type(response)}")
+                    print(f"[调试] response 值: '{response}'")
+                    print(f"[调试] response 长度: {len(response) if response else 0}")
+                    print(f"[调试] time_taken: {time_taken}")
+                
+                print(response)
                 if response:
                     self.add_to_history('assistant', response)
                     print(f"[耗时: {time_taken:.2f}秒]")

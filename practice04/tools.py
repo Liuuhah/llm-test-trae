@@ -373,7 +373,8 @@ class Tools:
         if not api_key:
             return {"success": False, "error": "缺少 ANYTHINGLLM_API_KEY 配置"}
 
-        url = f"http://localhost:3001/api/v1/workspace/{workspace_slug}/chat"
+        # 使用 127.0.0.1 而不是 localhost，避免 VPN 劫持
+        url = f"http://127.0.0.1:3001/api/v1/workspace/{workspace_slug}/chat"
         
         if debug:
             print(f"[调试] 使用的 workspace slug: '{workspace_slug}'")

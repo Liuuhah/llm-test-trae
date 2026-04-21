@@ -30,6 +30,9 @@ class ChatCompressClient:
         self.skip_next_extract = False    # 单次跳过标志
         self.extract_interval = 5         # 提取间隔（每5轮对话）
         self.log_file_path = r"D:\chat-log\log.txt"  # 日志文件路径
+        
+        # 日志模式配置
+        self.debug_mode = False  # 全局日志模式开关
     
     def _register_tools(self):
         """注册可用工具"""
@@ -229,11 +232,13 @@ class ChatCompressClient:
             )
         elif tool_name == "search_chat_history":
             return tools.search_chat_history(
-                tool_args.get("query")
+                tool_args.get("query"),
+                debug=self.debug_mode
             )
         elif tool_name == "anythingllm_query":
             return tools.anythingllm_query(
-                tool_args.get("message")
+                tool_args.get("message"),
+                debug=self.debug_mode
             )
         return {"error": f"未知工具: {tool_name}"}
     
@@ -543,8 +548,12 @@ class ChatCompressClient:
             print(traceback.format_exc())
             return None
     
-    def send_request_stream(self, prompt, max_tokens=4096, debug=False):
+    def send_request_stream(self, prompt, max_tokens=4096, debug=None):
         """发送流式请求，实时输出回复内容（带自动压缩功能）"""
+        # 优先使用类的 debug_mode，如果参数为 None 则使用默认值
+        if debug is None:
+            debug = self.debug_mode
+            
         # 在发送新请求前，检查是否需要压缩
         if self._should_compress():
             self._compress_chat_history()
@@ -1307,6 +1316,7 @@ class ChatCompressClient:
         print("  exit/quit - 退出程序")
         print("  clear     - 清空聊天历史")
         print("  debug     - 切换调试模式")
+        print("  log       - 切换详细日志模式")
         print("  stats     - 显示聊天统计信息")
         print("  skip_compress / 跳过压缩 - 跳过下次自动压缩")
         print("  enable_compress / 启用压缩 - 启用自动压缩")
@@ -1340,6 +1350,18 @@ class ChatCompressClient:
                     debug_mode = not debug_mode
                     status = "已启用" if debug_mode else "已禁用"
                     print(f"调试模式{status}")
+                    continue
+                
+                if user_input.lower() == 'log':
+                    self.debug_mode = not self.debug_mode
+                    status = "已启用" if self.debug_mode else "已禁用"
+                    print(f"📝 详细日志模式{status}")
+                    if self.debug_mode:
+                        print("   ✓ 将显示所有调试信息")
+                        print("   ✓ 包括 API 请求/响应、工具调用详情")
+                    else:
+                        print("   ✓ 仅显示关键信息")
+                        print("   ✓ 界面更简洁")
                     continue
                 
                 if user_input.lower() == 'stats':
@@ -1400,7 +1422,7 @@ class ChatCompressClient:
                     print(f"{'='*60}")
                     
                     # 直接调用工具
-                    result = tools.search_chat_history(query)
+                    result = tools.search_chat_history(query, debug=self.debug_mode)
                     
                     # 显示结果
                     if result.get('success'):

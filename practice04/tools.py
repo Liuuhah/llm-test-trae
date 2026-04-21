@@ -347,12 +347,13 @@ class Tools:
                             continue
         return config
 
-    def anythingllm_query(self, message: str) -> dict:
+    def anythingllm_query(self, message: str, debug: bool = False) -> dict:
         """
         使用 subprocess 调用 curl 命令，访问 AnythingLLM 知识库
         
         Args:
             message: 用户查询的问题
+            debug: 是否输出调试信息
         
         Returns:
             {
@@ -374,8 +375,8 @@ class Tools:
 
         url = f"http://localhost:3001/api/v1/workspace/{workspace_slug}/chat"
         
-        # 【新增】打印实际使用的 workspace slug
-        print(f"[调试] 使用的 workspace slug: '{workspace_slug}'")
+        if debug:
+            print(f"[调试] 使用的 workspace slug: '{workspace_slug}'")
         
         # 修改为 chat 模式，保留上下文
         payload = json.dumps({"message": message, "mode": "chat"})
@@ -393,8 +394,9 @@ class Tools:
                 "--max-time", "60"
             ]
             
-            print(f"[调试] 发送请求到: {url}")
-            print(f"[调试] 请求内容: {payload}")
+            if debug:
+                print(f"[调试] 发送请求到: {url}")
+                print(f"[调试] 请求内容: {payload}")
             
             result = subprocess.run(
                 cmd,
@@ -408,30 +410,36 @@ class Tools:
             if result.returncode != 0:
                 raise Exception(f"Curl 执行失败: {result.stderr}")
             
-            print(f"[调试] API 原始响应: {result.stdout[:500]}")
+            if debug:
+                print(f"[调试] API 原始响应: {result.stdout[:500]}")
                 
             response_data = json.loads(result.stdout)
             
             # 打印完整的响应结构，查看实际返回了什么字段
-            print(f"[调试] 响应字段: {list(response_data.keys())}")
-            print(f"[调试] textResponse: {response_data.get('textResponse', '不存在')}")
-            print(f"[调试] response: {response_data.get('response', '不存在')}")
-            print(f"[调试] message: {response_data.get('message', '不存在')}")
-            print(f"[调试] sources: {response_data.get('sources', '不存在')}")
+            if debug:
+                print(f"[调试] 响应字段: {list(response_data.keys())}")
+                print(f"[调试] textResponse: {response_data.get('textResponse', '不存在')}")
+                print(f"[调试] response: {response_data.get('response', '不存在')}")
+                print(f"[调试] message: {response_data.get('message', '不存在')}")
+                print(f"[调试] sources: {response_data.get('sources', '不存在')}")
             
         except FileNotFoundError:
             # Windows 下可能没有 curl，使用 fallback
-            print("[警告] 未找到 curl 命令，切换到 urllib 备用方案")
-            return self._anythingllm_query_fallback(url, api_key, payload)
+            if debug:
+                print("[警告] 未找到 curl 命令，切换到 urllib 备用方案")
+            return self._anythingllm_query_fallback(url, api_key, payload, debug)
         except subprocess.TimeoutExpired:
             return {"success": False, "error": "请求超时 (60秒)"}
         except json.JSONDecodeError:
             return {"success": False, "error": "API 响应格式错误"}
         except Exception as e:
+            if debug:
+                print(f"[错误] 查询异常: {str(e)}")
             return {"success": False, "error": f"查询异常: {str(e)}"}
         
         elapsed = time.time() - start_time
-        print(f"[性能] AnythingLLM 查询耗时: {elapsed:.2f}秒")
+        if debug:
+            print(f"[性能] AnythingLLM 查询耗时: {elapsed:.2f}秒")
         
         # 尝试多个可能的字段名
         answer = (response_data.get('textResponse') or 
@@ -445,7 +453,7 @@ class Tools:
         if answer is None:
             answer = ""
         
-        if not answer:
+        if not answer and debug:
             print(f"[警告] API 未返回回答内容，完整响应: {json.dumps(response_data, ensure_ascii=False)[:300]}")
             
         return {
@@ -454,9 +462,11 @@ class Tools:
             "sources": sources
         }
 
-    def _anythingllm_query_fallback(self, url, api_key, payload):
+    def _anythingllm_query_fallback(self, url, api_key, payload, debug=False):
         """urllib 备用方案"""
         try:
+            if debug:
+                print("[调试] 使用 urllib 备用方案发送请求")
             req = urllib.request.Request(
                 url,
                 data=payload.encode('utf-8'),
@@ -474,9 +484,11 @@ class Tools:
                     "sources": response_data.get('sources', [])
                 }
         except Exception as e:
+            if debug:
+                print(f"[错误] 备用方案也失败: {str(e)}")
             return {"success": False, "error": f"备用方案也失败: {str(e)}"}
 
-    def search_chat_history(self, query):
+    def search_chat_history(self, query, debug=False):
         """搜索聊天历史记录，查找与查询相关的历史对话信息"""
         try:
             # 检查参数
@@ -484,6 +496,9 @@ class Tools:
                 return {"error": "缺少查询参数，请提供搜索关键词"}
             
             log_file_path = r"D:\chat-log\log.txt"
+            
+            if debug:
+                print(f"[调试] 正在搜索聊天记录: {query}")
             
             # 检查日志文件是否存在
             if not os.path.exists(log_file_path):
@@ -535,9 +550,10 @@ class Tools:
             records = [r for r in records if r.strip() and '【记录时间】' in r]
             
             # 调试日志
-            print(f"[调试] 分割后得到 {len(records)} 条记录")
-            for idx, record in enumerate(records):
-                print(f"[调试] 记录{idx+1} 前100字符: {record[:100]}")
+            if debug:
+                print(f"[调试] 分割后得到 {len(records)} 条记录")
+                for idx, record in enumerate(records):
+                    print(f"[调试] 记录{idx+1} 前100字符: {record[:100]}")
             
             # 清理每条记录的内容（移除 Thinking Process）
             cleaned_records = []

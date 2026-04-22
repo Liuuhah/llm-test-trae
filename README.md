@@ -23,6 +23,12 @@ llm-test-trae/
     ├── chat_compress_client.py  # 带自动压缩功能的聊天客户端
     ├── tools.py            # 工具函数集合
     └── test_compression.py # 压缩功能测试脚本
+└── practice04/             # 练习4：AnythingLLM知识库集成
+    ├── chat_compress_client.py  # 带知识库查询功能的聊天客户端
+    ├── tools.py            # 工具函数集合（含anythingllm_query）
+    ├── test_anythingllm.py # AnythingLLM功能测试脚本
+    └── 项目经验文档/       # 开发经验文档
+        └── AnythingLLM集成开发经验.md
 ```
 
 ---
@@ -173,6 +179,87 @@ AI: 你好！有什么可以帮助你的吗？
 
 ---
 
+### Practice04 - AnythingLLM知识库集成 ⭐ 新功能
+
+#### chat_compress_client.py - 带知识库查询功能的聊天客户端
+
+**核心功能：**
+- ✅ **AnythingLLM集成**：通过API访问本地知识库，实现RAG检索增强生成
+- ✅ **智能工具触发**：当用户提到"文档仓库"、"文件仓库"、"知识库"、"查找文档"时自动调用
+- ✅ **双模型架构**：本地小模型（Qwen3.5-9B）负责意图识别和工具调用，在线大模型负责知识库问答
+- ✅ **跨平台兼容**：支持Windows/Linux，自动检测curl可用性，提供urllib备用方案
+- ✅ **完善的错误处理**：包括超时、网络错误、API异常、workspace配置错误等
+
+**新增工具：**
+- `anythingllm_query` - 查询本地文档仓库/知识库
+  - 使用subprocess调用curl命令访问AnythingLLM API
+  - 支持中文编码，自动处理URL编码
+  - 从.env文件读取API密钥和workspace配置
+  - 返回AI回答和引用来源
+
+**技术亮点：**
+1. **RAG技术应用**：检索增强生成，结合向量数据库和LLM提供准确回答
+2. **Function Calling**：让AI自主决定何时调用知识库查询工具
+3. **配置管理**：从.env文件灵活读取ANYTHINGLLM_API_KEY和WORKSPACE_SLUG
+4. **调试友好**：详细的日志输出、性能监控和完整的错误信息
+5. **容错机制**：curl失败时自动切换到urllib备用方案
+6. **VPN兼容**：使用127.0.0.1代替localhost，避免VPN劫持本地流量
+
+**开发注意事项：**
+- 📖 详细文档：[practice04/项目经验文档/AnythingLLM集成开发经验.md](./practice04/项目经验文档/AnythingLLM集成开发经验.md)
+- 🔍 核心问题：Workspace slug大小写敏感、Windows下curl兼容性、在线服务稳定性
+- 💡 最佳实践：API字段名兼容处理、思维链内容过滤、重试机制设计
+- 🔧 **已解决问题**：
+  - ✅ Workspace slug大小写敏感：必须与实际配置完全一致（小写"ai"）
+  - ✅ Windows下curl超时：改用urllib内置库，避免外部命令依赖
+  - ✅ VPN导致localhost连接失败：使用127.0.0.1明确指定本机IP
+  - ✅ API返回字段不一致：兼容textResponse、response、message等多个字段名
+  - ✅ 在线AI服务不稳定：添加详细的错误提示和调试信息
+
+**运行方式：**
+```bash
+cd practice04
+python chat_compress_client.py
+```
+
+**测试脚本：**
+```bash
+python practice04\test_anythingllm.py
+```
+
+**使用示例：**
+```
+你: 查询文档仓库，YOLOv10说明书
+AI: [调用anythingllm_query工具]
+完整工具调用: anythingllm_query
+完整参数: {"message": "YOLOv10 说明书"}
+[调试] 发送请求到: http://127.0.0.1:3001/api/v1/workspace/ai/chat
+[性能] AnythingLLM 查询耗时: 3.25秒
+
+AI: 根据文档仓库，YOLOv10是一个目标检测算法...
+指导老师：刘老师
+
+你: 白鹿原的主要内容是什么？
+AI: [自动识别为知识库查询]
+完整工具调用: anythingllm_query
+完整参数: {"message": "白鹿原的主要内容"}
+[性能] AnythingLLM 查询耗时: 54.72秒
+
+AI: 《白鹿原》介绍.txt文档的主要内容可总结为...
+```
+
+**配置要求：**
+1. 启动AnythingLLM服务（默认端口3001）
+2. 创建工作区并上传文档
+3. 在工作区设置中找到API Key和Workspace Slug
+4. 在`.env`文件中配置：
+```ini
+ANYTHINGLLM_API_KEY = "your_api_key_here"
+WORKSPACE_SLUG = "ai"  # 必须是小写，与AnythingLLM中的配置一致
+```
+
+---
+
 ## 配置文件说明
 
 ### .env 配置示例
@@ -189,6 +276,13 @@ MODEL="qwen/qwen3.5-9b"
 # API密钥 (本地LLM通常不需要，但为了兼容需要设置)
 TOKEN=""
 
+# AnythingLLM 配置（可选）
+# 1. 启动AnythingLLM服务
+# 2. 在工作区设置中找到API Key和Workspace Slug
+# 3. 填写以下配置
+ANYTHINGLLM_API_KEY = "N18RJPJ-RZ4MPE9-QQ3AX66-BEKC8BW"
+WORKSPACE_SLUG = "ai"
+
 # 其他可选配置
 # MAX_TOKENS=4096
 # TEMPERATURE=0.7
@@ -200,16 +294,35 @@ TOKEN=""
 BASE_URL="https://api.openai.com/v1"
 MODEL="gpt-3.5-turbo"
 TOKEN="your_api_key_here"
+
+# AnythingLLM 配置（可选）
+ANYTHINGLLM_API_KEY = "your_api_key_here"
+WORKSPACE_SLUG = "your_workspace_slug"
 ```
+
+### 使用在线模型（OpenRouter）
+
+如果想测试在线LLM的智慧程度和响应速度，可以使用OpenRouter：
+
+1. 注册OpenRouter账号：https://openrouter.ai/
+2. 获取API Key
+3. 修改`.env`文件：
+```ini
+BASE_URL="https://openrouter.ai/api/v1"
+TOKEN="sk-or-v1-..."
+MODEL="qwen/qwen3-coder:free"
+```
+4. 重新运行程序，观察在线模型的响应速度和回答质量
 
 ---
 
 ## 技术栈
 
-- **Python标准库**：http.client, json, re, os, time
+- **Python标准库**：http.client, json, re, os, time, subprocess, urllib
 - **无第三方依赖**：纯标准库实现，降低学习门槛
 - **SSE流式处理**：Server-Sent Events协议解析
 - **多编码支持**：UTF-8/GBK/GB2312/UTF-16自动检测
+- **RAG技术**：检索增强生成，结合向量数据库和LLM
 
 ---
 
@@ -223,6 +336,8 @@ TOKEN="your_api_key_here"
 6. **错误处理** - 多编码文件读取、网络异常处理
 7. **正则表达式** - 从复杂文本中提取结构化信息
 8. **API性能优化** - wttr.in案例：正确的API参数选择、User-Agent设置、URL编码
+9. **RAG技术应用** - AnythingLLM集成：向量数据库检索、双模型协同、知识库查询
+10. **跨平台开发** - Windows/Linux兼容性处理、curl/urllib备选方案
 
 ---
 
@@ -291,10 +406,34 @@ TOKEN="your_api_key_here"
 
 ---
 
+### AnythingLLM集成优化（2026-04-20）
+
+**问题描述：**
+- Workspace slug大小写敏感导致查询失败
+- Windows下curl命令超时
+- 在线AI服务不稳定返回502错误
+- VPN导致localhost连接失败
+
+**解决方案：**
+1. **Workspace slug规范**：必须使用小写"ai"，与AnythingLLM配置完全一致
+2. **跨平台兼容**：curl失败时自动切换到urllib备用方案
+3. **VPN兼容**：使用127.0.0.1代替localhost，避免流量劫持
+4. **字段兼容**：同时支持textResponse、response、message等多个返回字段
+5. **详细调试**：完整的请求/响应日志和性能监控
+
+**优化效果：**
+- ✅ 跨平台运行：Windows/Linux均可正常使用
+- ✅ 稳定可靠：完善的错误处理和重试机制
+- ✅ 调试友好：详细的日志输出便于问题定位
+- ✅ 配置灵活：从.env文件统一管理配置
+
+---
+
 ## 环境要求
 
 - Python 3.6+
 - 本地LLM服务（如LM Studio）或OpenAI API密钥
+- （可选）AnythingLLM服务用于知识库查询
 
 ---
 
@@ -319,6 +458,10 @@ TOKEN="your_api_key_here"
    
    # 智能聊天压缩
    cd practice03
+   python chat_compress_client.py
+   
+   # AnythingLLM知识库集成
+   cd practice04
    python chat_compress_client.py
    ```
 

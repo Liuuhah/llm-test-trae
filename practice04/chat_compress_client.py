@@ -741,8 +741,8 @@ class ChatCompressClient:
                                     )
                                     if response_content:
                                         tool_call_response = response_content
-                                # 有工具调用，返回工具执行后的响应
-                                return tool_call_response if tool_call_response else full_content, True
+                                # 工具调用已执行完毕，返回最终响应，标记为无更多工具调用
+                                return tool_call_response if tool_call_response else full_content, False
                             else:
                                 # 没有工具调用，正常结束
                                 if debug:
@@ -855,7 +855,8 @@ class ChatCompressClient:
                 )
                 if response_content:
                     tool_call_response = response_content
-            return tool_call_response if tool_call_response else full_content, True
+            # 工具调用已执行完毕，返回最终响应，标记为无更多工具调用
+            return tool_call_response if tool_call_response else full_content, False
         
         if debug:
             print(f"[调试] 流式请求完成，返回内容长度: {len(full_content)}")

@@ -184,7 +184,7 @@ class ChatCompressClient:
                 "type": "function",
                 "function": {
                     "name": "anythingllm_query",
-                    "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使用此工具。可以回答关于已上传文档的问题。",
+                    "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使用此工具。可以回答关于已上传文档的问题。\n\n重要提示：\n- 只返回与用户问题直接相关的文档内容\n- 如果检索到多个文档，优先展示最相关的1-2个\n- 对于明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -615,10 +615,9 @@ class ChatCompressClient:
         # 清理消息序列，避免连续相同角色的消息导致 Jinja 模板错误
         cleaned_history = self._clean_message_sequence(self.chat_history)
         
-        data = {
-            'model': self.model,
-            'messages': [
-                {'role': 'system', 'content': '''你是一个友好的AI助手，具有以下能力：
+        # 检查最后一条消息是否已经是当前用户的prompt，避免重复
+        messages_list = [
+            {'role': 'system', 'content': '''你是一个友好的AI助手，具有以下能力：
 1. 文件操作：列出目录、读写文件、重命名、删除
 2. 网页访问：使用 curl 工具访问网页
 3. 知识库查询：当用户提到"文档仓库"、"文件仓库"、"知识库"、"查找文档"时，使用 anythingllm_query 工具查询本地文档
@@ -626,10 +625,22 @@ class ChatCompressClient:
 重要提示：
 - 如果用户询问关于公司内部文档、政策、项目资料等问题，优先使用 anythingllm_query 工具
 - 如果用户询问通用知识，直接回答即可
-- 工具调用失败时，尝试其他方法或告知用户'''},
-                *cleaned_history,
-                {'role': 'user', 'content': prompt}
-            ],
+- 工具调用失败时，尝试其他方法或告知用户
+- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档'''}
+        ]
+        
+        # 只有当chat_history的最后一条不是当前prompt时，才添加prompt
+        if cleaned_history and cleaned_history[-1].get('role') == 'user' and cleaned_history[-1].get('content') == prompt:
+            # 最后一条已经是当前用户消息，不需要再添加
+            messages_list.extend(cleaned_history)
+        else:
+            # 需要添加当前用户消息
+            messages_list.extend(cleaned_history)
+            messages_list.append({'role': 'user', 'content': prompt})
+        
+        data = {
+            'model': self.model,
+            'messages': messages_list,
             'tools': self.tools,
             'tool_choice': 'auto',
             'max_tokens': max_tokens,
@@ -737,7 +748,6 @@ class ChatCompressClient:
                                 if debug:
                                     print(f"[调试] 没有工具调用，返回正常响应")
                                 return full_content, False
-                            continue
                         
                         try:
                             chunk_data = json.loads(json_str)
@@ -831,10 +841,10 @@ class ChatCompressClient:
         finally:
             conn.close()
         
-        # 流结束后的兜底检查
-        if pending_tool_calls:
+        # 流结束后的兜底检查（防止异常情况下pending_tool_calls未被处理）
+        if pending_tool_calls and not tool_call_response:
             if debug:
-                print(f"[调试] 流结束后检测到 {len(pending_tool_calls)} 个待执行的工具调用")
+                print(f"[调试] 流结束后检测到 {len(pending_tool_calls)} 个待执行的工具调用（兜底执行）")
             for tool_call_data in pending_tool_calls:
                 response_content = self._execute_pending_tool_call(
                     tool_call_data, 
@@ -905,7 +915,8 @@ class ChatCompressClient:
 重要提示：
 - 如果用户询问关于公司内部文档、政策、项目资料等问题，优先使用 anythingllm_query 工具
 - 如果用户询问通用知识，直接回答即可
-- 工具调用失败时，尝试其他方法或告知用户'''},
+- 工具调用失败时，尝试其他方法或告知用户
+- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档'''},
             *self.chat_history,
             {'role': 'user', 'content': prompt}
         ]

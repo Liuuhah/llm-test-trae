@@ -198,12 +198,9 @@ class Tools:
             
             original_url = url
             
-            # wttr.in 天气预报网站：不添加 format 参数，返回默认的3天文本表格预报
-            # 如果用户或 AI 指定了 format 参数，移除它以避免只返回当前天气
+            # wttr.in 天气预报网站：允许 format 参数，支持 j1 格式获取结构化数据
             if 'wttr.in' in url:
-                # 移除可能存在的 format 参数（如果 AI 错误地添加了 format=1/2/3/j1等）
-                url = re.sub(r'[&?]format=[123jJ][0-9]*', '', url)
-                # 清理多余的 & 或 ?
+                # 只清理 URL 格式问题，保留 format 参数
                 url = re.sub(r'\?&', '?', url)
                 url = re.sub(r'\?$', '', url)
                 url = re.sub(r'&$', '', url)
@@ -246,13 +243,106 @@ class Tools:
                     # 读取响应内容
                     content = response.read().decode('utf-8', errors='ignore')
                         
-            # wttr.in 不加 format 参数时返回3天文本表格预报（约500-800 tokens）
-            # 保持与其他 URL 一致的截断逻辑
-            if 'wttr.in' in original_url and 'text/plain' in content_type:
-                # wttr.in 文本格式不截断，保留完整内容（通常只有2-3KB）
+            # wttr.in 特殊处理：如果使用 format=j1，解析 JSON 并返回格式化文本
+            if 'wttr.in' in original_url and 'format=j1' in original_url:
+                try:
+                    import json as json_module
+                    weather_data = json_module.loads(content)
+                    
+                    # 检查是否是天气预报数据
+                    if 'weather' in weather_data and len(weather_data['weather']) > 0:
+                        # 默认查询明天（索引1），如果是今天则用索引0
+                        day_index = 1 if len(weather_data['weather']) > 1 else 0
+                        tomorrow = weather_data['weather'][day_index]
+                        date_str = tomorrow.get('date', '未知日期')
+                        
+                        # 提取四个时段的数据（wttr.in 每小时一个数据点，共8个）
+                        hourly_data = tomorrow.get('hourly', [])
+                        if len(hourly_data) >= 8:
+                            morning = hourly_data[2]   # 早晨
+                            noon = hourly_data[4]      # 中午
+                            evening = hourly_data[6]   # 傍晚
+                            night = hourly_data[7]     # 夜间
+                            
+                            def format_period(period_data, period_name):
+                                temp = period_data.get('tempC', 'N/A')
+                                weather_desc = period_data.get('weatherDesc', [{}])[0].get('value', '未知')
+                                wind_speed = period_data.get('windspeedKmph', 'N/A')
+                                humidity = period_data.get('humidity', 'N/A')
+                                precip_chance = period_data.get('chanceofrain', '0')
+                                
+                                return f"{period_name}\n" \
+                                       f"   天气: {weather_desc}\n" \
+                                       f"   温度: {temp}°C | 风力: {wind_speed} km/h | 湿度: {humidity}%\n" \
+                                       f"   降水概率: {precip_chance}%"
+                            
+                            # 计算整体温度范围
+                            all_temps = [int(h.get('tempC', 0)) for h in hourly_data if h.get('tempC')]
+                            max_temp = max(all_temps) if all_temps else 'N/A'
+                            min_temp = min(all_temps) if all_temps else 'N/A'
+                            avg_temp = sum(all_temps) // len(all_temps) if all_temps else 'N/A'
+                            
+                            # 生成穿搭建议
+                            dressing_advice = ""
+                            if isinstance(avg_temp, int):
+                                if avg_temp < 10:
+                                    dressing_advice = "🧥 温度较低，建议穿厚外套、毛衣，注意保暖"
+                                elif avg_temp < 20:
+                                    dressing_advice = "👔 温度舒适偏凉，建议穿长袖T恤或薄外套"
+                                elif avg_temp < 28:
+                                    dressing_advice = "👕 温度温暖，建议穿短袖或轻薄衣物"
+                                else:
+                                    dressing_advice = "🩳 温度较高，建议穿透气轻薄的夏装，注意防晒"
+                            
+                            # 生成出行建议
+                            travel_tips = []
+                            morning_precip = int(morning.get('chanceofrain', 0))
+                            if morning_precip > 50:
+                                travel_tips.append("☔️ 早晨可能有雨，建议携带雨伞")
+                            elif morning_precip > 20:
+                                travel_tips.append("⛅ 早晨可能有零星小雨，可备折叠伞")
+                            else:
+                                travel_tips.append("✅ 早晨天气良好")
+                            
+                            evening_wind = int(evening.get('windspeedKmph', 0))
+                            if evening_wind > 20:
+                                travel_tips.append("💨 傍晚风力较大，注意防风")
+                            elif evening_wind > 10:
+                                travel_tips.append("💨 傍晚有微风，体感凉爽")
+                            else:
+                                travel_tips.append("💨 风力较小，体感舒适")
+                            
+                            # 生成格式化输出
+                            formatted_weather = f"📅 天气预报 ({date_str})\n"
+                            formatted_weather += f"{'='*60}\n\n"
+                            formatted_weather += f"🌡️  整体概况：\n"
+                            formatted_weather += f"   平均温度: {avg_temp}°C | 最高: {max_temp}°C | 最低: {min_temp}°C\n\n"
+                            formatted_weather += f"{'='*60}\n\n"
+                            formatted_weather += f"🕐 分时段详情：\n\n"
+                            formatted_weather += format_period(morning, '🌅 早晨') + "\n\n"
+                            formatted_weather += format_period(noon, '🌤️ 中午') + "\n\n"
+                            formatted_weather += format_period(evening, '🌆 傍晚') + "\n\n"
+                            formatted_weather += format_period(night, '🌃 夜间') + "\n\n"
+                            formatted_weather += f"{'='*60}\n\n"
+                            formatted_weather += f"💡 出行建议：\n"
+                            for tip in travel_tips:
+                                formatted_weather += f"   {tip}\n"
+                            formatted_weather += f"   {dressing_advice}\n\n"
+                            formatted_weather += f"{'='*60}"
+                            
+                            # 返回格式化后的内容，而不是原始 JSON
+                            content = formatted_weather
+                            content_type = 'text/plain; charset=utf-8'
+                except Exception as e:
+                    # 如果解析失败，返回原始内容
+                    pass
+            
+            # wttr.in 经过格式化后已经是精简文本，不需要截断
+            if 'wttr.in' in original_url:
+                # 无论是文本格式还是格式化后的JSON，都保持完整
                 pass
             elif 'json' in content_type:
-                # JSON格式保留更多
+                # 其他 JSON 格式保留更多
                 content = content[:5000]
             elif 'html' in content_type:
                 # HTML格式只保留前2000字符

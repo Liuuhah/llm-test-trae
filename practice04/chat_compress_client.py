@@ -150,7 +150,7 @@ class ChatCompressClient:
                 "type": "function",
                 "function": {
                     "name": "curl",
-                    "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时，使用英文城市名（如Chengdu、Beijing），不要使用中文。格式：https://wttr.in/{城市英文名}",
+                    "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如Chengdu、Beijing），不要使用中文\n2. 必须添加 format=j1 参数获取JSON格式数据\n3. 完整格式：https://wttr.in/{城市英文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -907,7 +907,9 @@ class ChatCompressClient:
             conn = http.client.HTTPConnection(self.host)
         
         # 重新构建请求时禁用工具调用
-        data['messages'] = [
+        cleaned_history = self._clean_message_sequence(self.chat_history)
+        
+        messages_list = [
             {'role': 'system', 'content': '''你是一个友好的AI助手，具有以下能力：
 1. 文件操作：列出目录、读写文件、重命名、删除
 2. 网页访问：使用 curl 工具访问网页
@@ -917,10 +919,19 @@ class ChatCompressClient:
 - 如果用户询问关于公司内部文档、政策、项目资料等问题，优先使用 anythingllm_query 工具
 - 如果用户询问通用知识，直接回答即可
 - 工具调用失败时，尝试其他方法或告知用户
-- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档'''},
-            *self.chat_history,
-            {'role': 'user', 'content': prompt}
+- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档'''}
         ]
+        
+        # 检查最后一条消息是否已经是当前用户的prompt，避免重复
+        if cleaned_history and cleaned_history[-1].get('role') == 'user' and cleaned_history[-1].get('content') == prompt:
+            # 最后一条已经是当前用户消息，不需要再添加
+            messages_list.extend(cleaned_history)
+        else:
+            # 需要添加当前用户消息
+            messages_list.extend(cleaned_history)
+            messages_list.append({'role': 'user', 'content': prompt})
+        
+        data['messages'] = messages_list
         # 禁用工具调用，因为已经执行过了
         data['tool_choice'] = 'none'
         
@@ -1470,7 +1481,10 @@ class ChatCompressClient:
                     print(f"[调试] response 长度: {len(response) if response else 0}")
                     print(f"[调试] time_taken: {time_taken}")
                 
-                print(response)
+                # 注意：response 已经在 _send_single_stream 中流式输出了，这里不需要再打印
+                # 只需要添加一个换行符即可
+                if response:
+                    print()  # 添加换行，与流式输出的内容分隔
                 if response:
                     self.add_to_history('assistant', response)
                     print(f"[耗时: {time_taken:.2f}秒]")

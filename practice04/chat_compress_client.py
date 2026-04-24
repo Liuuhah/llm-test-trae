@@ -150,7 +150,7 @@ class ChatCompressClient:
                 "type": "function",
                 "function": {
                     "name": "curl",
-                    "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如Chengdu、Beijing），不要使用中文\n2. 必须添加 format=j1 参数获取JSON格式数据\n3. 完整格式：https://wttr.in/{城市英文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
+                    "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1. 必须使用英文城市名（如Chengdu、Beijing），不要使用中文\n  2. 必须添加 format=j1 参数获取JSON格式数据\n  3. 完整格式：https://wttr.in/{城市英文名}?format=j1\n  示例：https://wttr.in/Chengdu?format=j1\n  \n- 天气数据已经由工具格式化好，直接使用该数据回答用户\n- 不要重复调用此工具获取相同城市的天气\n- 如果需要查询其他城市或日期的天气，请明确说明\n\n【禁止行为】\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
                     "parameters": {
                         "type": "object",
                         "properties": {
@@ -626,7 +626,14 @@ class ChatCompressClient:
 - 如果用户询问关于公司内部文档、政策、项目资料等问题，优先使用 anythingllm_query 工具
 - 如果用户询问通用知识，直接回答即可
 - 工具调用失败时，尝试其他方法或告知用户
-- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档'''}
+- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档
+
+【工具使用规范】
+- 当工具返回数据后，直接使用该数据回答用户问题
+- 不要重复调用相同的工具获取相同的数据
+- 工具返回的内容已经过格式化，直接使用，不要重新格式化
+- 不要添加原始数据中没有的信息或建议
+- 不要翻译或解释工具返回的内容，直接展示即可'''}
         ]
         
         # 只有当chat_history的最后一条不是当前prompt时，才添加prompt
@@ -919,7 +926,14 @@ class ChatCompressClient:
 - 如果用户询问关于公司内部文档、政策、项目资料等问题，优先使用 anythingllm_query 工具
 - 如果用户询问通用知识，直接回答即可
 - 工具调用失败时，尝试其他方法或告知用户
-- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档'''}
+- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档
+
+【工具使用规范】
+- 当工具返回数据后，直接使用该数据回答用户问题
+- 不要重复调用相同的工具获取相同的数据
+- 工具返回的内容已经过格式化，直接使用，不要重新格式化
+- 不要添加原始数据中没有的信息或建议
+- 不要翻译或解释工具返回的内容，直接展示即可'''}
         ]
         
         # 检查最后一条消息是否已经是当前用户的prompt，避免重复
@@ -1053,7 +1067,7 @@ class ChatCompressClient:
         response_data = self._send_extract_request(
             extract_prompt, 
             max_tokens=512,  # 5W 结果不需要太多 token
-            temperature=0.3
+            temperature=0.5
         )
         
         # 解析响应

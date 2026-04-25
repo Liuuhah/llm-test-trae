@@ -1095,7 +1095,15 @@ class ChatCompressClient:
             self.extract_message_counter = 0  # ✅ 重置计数器
             
             # 保存到日志文件
-            success = self._save_to_log_file(extracted_info, len(self.chat_history) // 2)
+            should_compress = self._should_compress()
+            success = self._save_to_log_file(
+                extracted_info=extracted_info,
+                round_number=len(self.chat_history) // 2,
+                recent_messages=recent_messages,
+                is_cumulative=is_cumulative,
+                counter_value=self.extract_message_counter,  # 注意：此时计数器已重置为0，但为了记录触发时的状态，可以传入重置前的值。不过需求文档中要求传入当前值。
+                should_compress=should_compress
+            )
             
             if success:
                 print("[关键信息提取] ✅ 完成")
@@ -1383,52 +1391,112 @@ class ChatCompressClient:
         print(f"[解析成功] 标准模式：提取到 {len(content)} 字符的 5W 结果")
         return content, "success", None
     
-    def _save_to_log_file(self, extracted_info, round_number):
-        """将提取的信息保存到日志文件（增量更新）"""
+    def _save_to_log_file(self, extracted_info, round_number, recent_messages=None, is_cumulative=False, counter_value=0, should_compress=False):
+        """将提取的关键信息保存到日志文件（增强版）
+        
+        Args:
+            extracted_info: 提取的 5W 信息字符串
+            round_number: 对话轮次
+            recent_messages: 最近的消息列表（用于记录原始对话）
+            is_cumulative: 是否为累积模式
+            counter_value: 当前计数器值
+            should_compress: 是否触发了压缩
+        """
         
         log_dir = os.path.dirname(self.log_file_path)
         
         try:
-            # 检查是否包含5W关键字段（支持两种格式：- Who: 和 Who:）
-            if not re.search(r'(?:^|\n)\s*(?:-\s*)?(Who|What|When|Where|Why):', extracted_info, re.MULTILINE):
-                print("[日志警告] 提取内容不包含5W信息，跳过保存")
-                return False
-            
             # 如果目录不存在，创建目录
             if not os.path.exists(log_dir):
                 os.makedirs(log_dir)
                 print(f"[日志保存] 创建目录: {log_dir}")
             
-            # 获取当前时间戳
-            timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+            # 获取当前时间
+            from datetime import datetime
+            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             
-            # 清理内容（移除 Thinking Process）
-            clean_content = self._clean_extraction_content(extracted_info)
-            
-            # 检测是否为累积模式
-            is_cumulative = '=== 历史对话摘要 ===' in extracted_info
-            
-            # 格式化日志条目
-            log_entry = f"\n{'='*60}\n"
-            log_entry += f"【记录时间】{timestamp}\n"
-            log_entry += f"【对话轮次】第 {round_number} 轮\n"
+            # 判断提取模式
             if is_cumulative:
-                log_entry += f"🔄 提取模式: 累积模式（包含历史对话）\n"
+                extract_mode = "累积模式（包含历史对话）"
             else:
-                log_entry += f"📊 提取模式: 标准模式\n"
-            log_entry += f"{'='*60}\n"
-            log_entry += clean_content
-            log_entry += f"\n{'='*60}\n"
+                extract_mode = "标准模式"
             
-            # 追加写入文件
+            # 判断触发原因
+            trigger_reason = f"计数器达到阈值 ({counter_value} % {self.extract_interval} == 0)"
+            if is_cumulative and counter_value > self.extract_interval:
+                trigger_reason += "，且之前有失败记录"
+            
+            # 开始构建日志内容
+            log_content = "\n" + "=" * 60 + "\n"
+            log_content += f"【记录时间】{current_time}\n"
+            log_content += f"【对话轮次】第 {round_number} 轮\n"
+            log_content += f"【提取模式】{extract_mode}\n"
+            log_content += f"【计数器状态】extract_message_counter = {counter_value}\n"
+            log_content += f"【触发原因】{trigger_reason}\n"
+            log_content += "=" * 60 + "\n\n"
+            
+            # 判断是成功还是失败
+            if extracted_info and "无法提取" not in extracted_info:
+                # 成功提取
+                log_content += "📊 5W 提取结果：\n"
+                log_content += extracted_info.strip() + "\n\n"
+                log_content += "✅ 提取状态：成功"
+                if is_cumulative:
+                    log_content += "（累积模式）"
+                log_content += "\n"
+            else:
+                # 提取失败
+                log_content += "❌ 提取状态：失败\n"
+                # 提取失败原因
+                if extracted_info:
+                    reason_line = [line for line in extracted_info.split('\n') if '原因' in line or '无法提取' in line]
+                    if reason_line:
+                        log_content += f"【失败原因】{reason_line[0].strip()}\n"
+                    else:
+                        log_content += f"【失败原因】{extracted_info.strip()}\n"
+                else:
+                    log_content += "【失败原因】未知错误\n"
+                log_content += "\n"
+            
+            # 添加原始对话记录
+            if recent_messages:
+                log_content += f"\n📝 原始对话（最近 {len(recent_messages)} 条消息）：\n"
+                for i, msg in enumerate(recent_messages, 1):
+                    role = msg.get('role', 'unknown')
+                    content = msg.get('content', '')
+                    
+                    # 对 assistant 的内容进行截断和总结
+                    if role == 'assistant':
+                        # 只保留前 50 个字符，后面加省略号
+                        if len(content) > 50:
+                            summary = content[:50].replace('\n', ' ').strip() + "..."
+                        else:
+                            summary = content.replace('\n', ' ').strip()
+                        log_content += f"[{i}] {role}: {summary}\n"
+                    else:
+                        # user 的消息完整显示
+                        log_content += f"[{i}] {role}: {content}\n"
+                log_content += "\n"
+            
+            # 添加保存位置和后续操作
+            log_content += f"💾 保存位置：{self.log_file_path}\n"
+            
+            if should_compress:
+                log_content += f"🗜️ 后续操作：触发压缩（保留后 {self.max_rounds * 2} 条）\n"
+            else:
+                log_content += f"🗜️ 后续操作：未触发压缩\n"
+            
+            log_content += "=" * 60 + "\n"
+            
+            # 写入文件
             with open(self.log_file_path, 'a', encoding='utf-8') as f:
-                f.write(log_entry)
+                f.write(log_content)
             
             print(f"[日志保存] 成功保存到: {self.log_file_path}")
             return True
             
         except Exception as e:
-            print(f"[日志保存] 错误: {str(e)}")
+            print(f"[日志保存] ❌ 保存失败: {e}")
             return False
     
     def _save_failed_extraction(self, round_number, reason, recent_messages):
@@ -1462,6 +1530,16 @@ class ChatCompressClient:
             
             print(f"[关键信息提取] 📝 已记录失败信息到日志")
             print(f"[关键信息提取] 💡 原因: {reason}")
+            
+            # 同时也调用 _save_to_log_file 保存一份详细格式的失败记录（可选，为了格式统一）
+            self._save_to_log_file(
+                extracted_info=f"【无法提取】{reason}",
+                round_number=round_number,
+                recent_messages=recent_messages,
+                is_cumulative=(self.extract_message_counter > self.extract_interval),
+                counter_value=self.extract_message_counter,
+                should_compress=False  # 失败时不触发压缩
+            )
             
         except Exception as e:
             print(f"[关键信息提取] ⚠️ 保存失败记录时出错: {str(e)}")

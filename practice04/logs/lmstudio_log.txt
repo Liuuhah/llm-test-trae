@@ -1,313 +1,22 @@
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER] Success! HTTP server listening on port 1234
-2026-04-24 10:46:09  [INFO]
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER] Supported endpoints:
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]   LM Studio API
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  GET  http://localhost:1234/api/v1/models
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  POST http://localhost:1234/api/v1/chat
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  POST http://localhost:1234/api/v1/models/load
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  POST http://localhost:1234/api/v1/models/download
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  GET http://localhost:1234/api/v1/models/download/status:job_id
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]   OpenAI-compatible
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  GET  http://localhost:1234/v1/models
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  POST http://localhost:1234/v1/responses
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  POST http://localhost:1234/v1/chat/completions
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  POST http://localhost:1234/v1/completions
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER]    ->  POST http://localhost:1234/v1/embeddings
-2026-04-24 10:46:09  [INFO]
-2026-04-24 10:46:09  [INFO]
- [LM STUDIO SERVER] Logs are saved into C:\Users\Administrator\.lmstudio\server-logs
-2026-04-24 10:46:09  [INFO]
- Server started.
-2026-04-24 10:46:09  [INFO]
- Just-in-time model loading active.
-2026-04-24 10:55:54 [DEBUG]
- LlamaV4::load called with model path: C:\Users\Administrator\.lmstudio\models\lmstudio-community\Qwen3.5-9B-GGUF\Qwen3.5-9B-Q4_K_M.gguf
-2026-04-24 10:55:54 [DEBUG]
- 
-LlamaV4::load config: n_parallel=4 n_ctx=59924 kv_unified=true
-2026-04-24 10:55:54 [DEBUG]
- ggml_cuda_init: found 1 CUDA devices (Total VRAM: 8187 MiB):
-  Device 0: NVIDIA GeForce RTX 4060 Laptop GPU, compute capability 8.9, VMM: yes, VRAM: 8187 MiB
-2026-04-24 10:55:54 [DEBUG]
- srv    load_model: loading model 'C:\Users\Administrator\.lmstudio\models\lmstudio-community\Qwen3.5-9B-GGUF\Qwen3.5-9B-Q4_K_M.gguf'
-2026-04-24 10:55:55 [DEBUG]
- llama_model_load_from_file_impl: using device CUDA0 (NVIDIA GeForce RTX 4060 Laptop GPU) (0000:01:00.0) - 6987 MiB free
-2026-04-24 10:55:55 [DEBUG]
- llama_model_loader: loaded meta data with 34 key-value pairs and 427 tensors from C:\Users\Administrator\.lmstudio\models\lmstudio-community\Qwen3.5-9B-GGUF\Qwen3.5-9B-Q4_K_M.gguf (version GGUF V3 (latest))
-llama_model_loader: Dumping metadata keys/values. Note: KV overrides do not apply in this output.
-llama_model_loader: - kv   0:                       general.architecture str              = qwen35
-llama_model_loader: - kv   1:                               general.type str              = model
-llama_model_loader: - kv   2:                               general.name str              = Qwen_Qwen3.5 9B
-llama_model_loader: - kv   3:                           general.basename str              = Qwen_Qwen3.5
-llama_model_loader: - kv   4:                         general.size_label str              = 9B
-llama_model_loader: - kv   5:                         qwen35.block_count u32              = 32
-llama_model_loader: - kv   6:                      qwen35.context_length u32              = 262144
-llama_model_loader: - kv   7:                    qwen35.embedding_length u32              = 4096
-llama_model_loader: - kv   8:                 qwen35.feed_forward_length u32              = 12288
-llama_model_loader: - kv   9:                qwen35.attention.head_count u32              = 16
-llama_model_loader: - kv  10:             qwen35.attention.head_count_kv u32              = 4
-llama_model_loader: - kv  11:             qwen35.rope.dimension_sections arr[i32,4]       = [11, 11, 10, 0]
-llama_model_loader: - kv  12:                      qwen35.rope.freq_base f32              = 10000000.000000
-llama_model_loader: - kv  13:    qwen35.attention.layer_norm_rms_epsilon f32              = 0.000001
-llama_model_loader: - kv  14:                qwen35.attention.key_length u32              = 256
-llama_model_loader: - kv  15:              qwen35.attention.value_length u32              = 256
-llama_model_loader: - kv  16:                     qwen35.ssm.conv_kernel u32              = 4
-llama_model_loader: - kv  17:                      qwen35.ssm.state_size u32              = 128
-llama_model_loader: - kv  18:                     qwen35.ssm.group_count u32              = 16
-llama_model_loader: - kv  19:                  qwen35.ssm.time_step_rank u32              = 32
-llama_model_loader: - kv  20:                      qwen35.ssm.inner_size u32              = 4096
-llama_model_loader: - kv  21:             qwen35.full_attention_interval u32              = 4
-llama_model_loader: - kv  22:                qwen35.rope.dimension_count u32              = 64
-llama_model_loader: - kv  23:                       tokenizer.ggml.model str              = gpt2
-llama_model_loader: - kv  24:                         tokenizer.ggml.pre str              = qwen35
-2026-04-24 10:55:55 [DEBUG]
- llama_model_loader: - kv  25:                      tokenizer.ggml.tokens arr[str,248320]  = ["!", "\"", "#", "$", "%", "&", "'", ...
-2026-04-24 10:55:55 [DEBUG]
- llama_model_loader: - kv  26:                  tokenizer.ggml.token_type arr[i32,248320]  = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
-2026-04-24 10:55:56 [DEBUG]
- llama_model_loader: - kv  27:                      tokenizer.ggml.merges arr[str,247587]  = ["Ġ Ġ", "ĠĠ ĠĠ", "i n", "Ġ t",...
-llama_model_loader: - kv  28:                tokenizer.ggml.eos_token_id u32              = 248046
-llama_model_loader: - kv  29:            tokenizer.ggml.padding_token_id u32              = 248044
-llama_model_loader: - kv  30:               tokenizer.ggml.add_bos_token bool             = false
-llama_model_loader: - kv  31:                    tokenizer.chat_template str              = {%- set image_count = namespace(value...
-llama_model_loader: - kv  32:               general.quantization_version u32              = 2
-llama_model_loader: - kv  33:                          general.file_type u32              = 15
-llama_model_loader: - type  f32:  177 tensors
-llama_model_loader: - type q4_K:  204 tensors
-llama_model_loader: - type q5_K:   24 tensors
-llama_model_loader: - type q6_K:   22 tensors
-print_info: file format = GGUF V3 (latest)
-print_info: file type   = Q4_K - Medium
-print_info: file size   = 5.23 GiB (5.02 BPW)
-2026-04-24 10:55:56 [DEBUG]
- load: 0 unused tokens
-2026-04-24 10:55:56 [DEBUG]
- load: printing all EOG tokens:
-load:   - 248044 ('<|endoftext|>')
-load:   - 248046 ('<|im_end|>')
-load:   - 248063 ('<|fim_pad|>')
-load:   - 248064 ('<|repo_name|>')
-load:   - 248065 ('<|file_sep|>')
-2026-04-24 10:55:56 [DEBUG]
- load: special tokens cache size = 33
-2026-04-24 10:55:56 [DEBUG]
- load: token to piece cache size = 1.7581 MB
-2026-04-24 10:55:56 [DEBUG]
- print_info: arch                  = qwen35
-print_info: vocab_only            = 0
-print_info: no_alloc              = 0
-print_info: n_ctx_train           = 262144
-print_info: n_embd                = 4096
-print_info: n_embd_inp            = 4096
-print_info: n_layer               = 32
-print_info: n_head                = 16
-print_info: n_head_kv             = 4
-print_info: n_rot                 = 64
-print_info: n_swa                 = 0
-print_info: is_swa_any            = 0
-print_info: n_embd_head_k         = 256
-print_info: n_embd_head_v         = 256
-print_info: n_gqa                 = 4
-print_info: n_embd_k_gqa          = 1024
-print_info: n_embd_v_gqa          = 1024
-print_info: f_norm_eps            = 0.0e+00
-print_info: f_norm_rms_eps        = 1.0e-06
-print_info: f_clamp_kqv           = 0.0e+00
-print_info: f_max_alibi_bias      = 0.0e+00
-print_info: f_logit_scale         = 0.0e+00
-print_info: f_attn_scale          = 0.0e+00
-print_info: n_ff                  = 12288
-print_info: n_expert              = 0
-print_info: n_expert_used         = 0
-print_info: n_expert_groups       = 0
-print_info: n_group_used          = 0
-print_info: causal attn           = 1
-print_info: pooling type          = -1
-print_info: rope type             = 40
-print_info: rope scaling          = linear
-print_info: freq_base_train       = 10000000.0
-print_info: freq_scale_train      = 1
-print_info: n_ctx_orig_yarn       = 262144
-print_info: rope_yarn_log_mul     = 0.0000
-print_info: rope_finetuned        = unknown
-print_info: mrope sections        = [11, 11, 10, 0]
-print_info: ssm_d_conv            = 4
-print_info: ssm_d_inner           = 4096
-print_info: ssm_d_state           = 128
-print_info: ssm_dt_rank           = 32
-print_info: ssm_n_group           = 16
-print_info: ssm_dt_b_c_rms        = 0
-print_info: model type            = 9B
-print_info: model params          = 8.95 B
-print_info: general.name          = Qwen_Qwen3.5 9B
-print_info: vocab type            = BPE
-print_info: n_vocab               = 248320
-print_info: n_merges              = 247587
-print_info: BOS token             = 11 ','
-print_info: EOS token             = 248046 '<|im_end|>'
-print_info: EOT token             = 248046 '<|im_end|>'
-print_info: PAD token             = 248044 '<|endoftext|>'
-print_info: LF token              = 198 'Ċ'
-print_info: FIM PRE token         = 248060 '<|fim_prefix|>'
-print_info: FIM SUF token         = 248062 '<|fim_suffix|>'
-print_info: FIM MID token         = 248061 '<|fim_middle|>'
-print_info: FIM PAD token         = 248063 '<|fim_pad|>'
-print_info: FIM REP token         = 248064 '<|repo_name|>'
-print_info: FIM SEP token         = 248065 '<|file_sep|>'
-print_info: EOG token             = 248044 '<|endoftext|>'
-print_info: EOG token             = 248046 '<|im_end|>'
-print_info: EOG token             = 248063 '<|fim_pad|>'
-print_info: EOG token             = 248064 '<|repo_name|>'
-print_info: EOG token             = 248065 '<|file_sep|>'
-print_info: max token length      = 256
-load_tensors: loading model tensors, this can take a while... (mmap = true, direct_io = false)
-2026-04-24 10:55:59 [DEBUG]
- load_tensors: offloading output layer to GPU
-load_tensors: offloading 28 repeating layers to GPU
-load_tensors: offloaded 29/33 layers to GPU
-load_tensors:   CPU_Mapped model buffer size =  1072.58 MiB
-load_tensors:        CUDA0 model buffer size =  4283.33 MiB
-2026-04-24 10:56:01 [DEBUG]
- common_init_result: added <|endoftext|> logit bias = -inf
-common_init_result: added <|im_end|> logit bias = -inf
-common_init_result: added <|fim_pad|> logit bias = -inf
-common_init_result: added <|repo_name|> logit bias = -inf
-common_init_result: added <|file_sep|> logit bias = -inf
-2026-04-24 10:56:01 [DEBUG]
- llama_context: constructing llama_context
-llama_context: n_seq_max     = 4
-llama_context: n_ctx         = 60160
-llama_context: n_ctx_seq     = 60160
-llama_context: n_batch       = 512
-llama_context: n_ubatch      = 512
-llama_context: causal_attn   = 1
-2026-04-24 10:56:01 [DEBUG]
- llama_context: flash_attn    = enabled
-llama_context: kv_unified    = true
-llama_context: freq_base     = 10000000.0
-llama_context: freq_scale    = 1
-llama_context: n_ctx_seq (60160) < n_ctx_train (262144) -- the full capacity of the model will not be utilized
-2026-04-24 10:56:01 [DEBUG]
- llama_context:  CUDA_Host  output buffer size =     3.79 MiB
-2026-04-24 10:56:01 [DEBUG]
- llama_kv_cache:        CPU KV buffer size =    73.44 MiB
-2026-04-24 10:56:01 [DEBUG]
- llama_kv_cache:      CUDA0 KV buffer size =   514.06 MiB
-2026-04-24 10:56:01 [DEBUG]
- llama_kv_cache: size =  587.50 MiB ( 60160 cells,   8 layers,  4/1 seqs), K (q4_1):  293.75 MiB, V (q4_1):  293.75 MiB
-llama_kv_cache: attn_rot_k = 1, n_embd_head_k_all = 256
-llama_kv_cache: attn_rot_v = 1, n_embd_head_k_all = 256
-2026-04-24 10:56:01 [DEBUG]
- llama_memory_recurrent:        CPU RS buffer size =    25.12 MiB
-2026-04-24 10:56:01 [DEBUG]
- llama_memory_recurrent:      CUDA0 RS buffer size =   175.88 MiB
-llama_memory_recurrent: size =  201.00 MiB (     4 cells,  32 layers,  4 seqs), R (f32):    9.00 MiB, S (f32):  192.00 MiB
-sched_reserve: reserving ...
-2026-04-24 10:56:01 [DEBUG]
- sched_reserve: resolving fused Gated Delta Net support:
-2026-04-24 10:56:01 [DEBUG]
- sched_reserve: fused Gated Delta Net (autoregressive) enabled
-2026-04-24 10:56:01 [DEBUG]
- sched_reserve: layer 0 is assigned to device CPU but the fused Gated Delta Net tensor is assigned to device CUDA0 (usually due to missing support)
-sched_reserve: fused Gated Delta Net (chunked) not supported, set to disabled
-2026-04-24 10:56:01 [DEBUG]
- sched_reserve:      CUDA0 compute buffer size =   501.00 MiB
-sched_reserve:  CUDA_Host compute buffer size =   162.50 MiB
-sched_reserve: graph nodes  = 4257 (with bs=512), 1977 (with bs=1)
-sched_reserve: graph splits = 82 (with bs=512), 24 (with bs=1)
-sched_reserve: reserve took 40.27 ms, sched copies = 1
-2026-04-24 10:56:01 [DEBUG]
- common_init_from_params: KV cache shifting is not supported for this context, disabling KV cache shifting
-common_init_from_params: warming up the model with an empty run - please wait ... (--no-warmup to disable)
-2026-04-24 10:56:03 [DEBUG]
- clip_model_loader: model name:   Qwen_Qwen3.5 9B
-clip_model_loader: description:  
-clip_model_loader: GGUF version: 3
-clip_model_loader: alignment:    32
-clip_model_loader: n_tensors:    334
-clip_model_loader: n_kv:         23
-
-clip_model_loader: has vision encoder
-2026-04-24 10:56:03 [DEBUG]
- clip_ctx: CLIP using CUDA0 backend
-2026-04-24 10:56:03 [DEBUG]
- load_hparams: Qwen-VL models require at minimum 1024 image tokens to function correctly on grounding tasks
-load_hparams: if you encounter problems with accuracy, try adding --image-min-tokens 1024
-load_hparams: more info: https://github.com/ggml-org/llama.cpp/issues/16842
-
-load_hparams: projector:          qwen3vl_merger
-load_hparams: n_embd:             1152
-load_hparams: n_head:             16
-load_hparams: n_ff:               4304
-load_hparams: n_layer:            27
-load_hparams: ffn_op:             gelu
-load_hparams: projection_dim:     4096
-
---- vision hparams ---
-load_hparams: image_size:         768
-load_hparams: patch_size:         16
-load_hparams: has_llava_proj:     0
-load_hparams: minicpmv_version:   0
-load_hparams: n_merge:            2
-load_hparams: n_wa_pattern: 0
-load_hparams: image_min_pixels:   8192
-load_hparams: image_max_pixels:   4194304
-2026-04-24 10:56:03 [DEBUG]
- load_hparams: model size:         878.99 MiB
-load_hparams: metadata size:      0.12 MiB
-2026-04-24 10:56:06 [DEBUG]
- warmup: warmup with image size = 1472 x 1472
-2026-04-24 10:56:06 [DEBUG]
- alloc_compute_meta:      CUDA0 compute buffer size =   248.10 MiB
-alloc_compute_meta:        CPU compute buffer size =    24.93 MiB
-alloc_compute_meta: graph splits = 1, nodes = 823
-warmup: flash attention is enabled
-srv    load_model: loaded multimodal model, 'C:/Users/Administrator/.lmstudio/models/lmstudio-community/Qwen3.5-9B-GGUF/mmproj-Qwen3.5-9B-BF16.gguf'
-srv    load_model: initializing slots, n_slots = 4
-2026-04-24 10:56:06 [DEBUG]
- common_speculative_is_compat: the target context does not support partial sequence removal
-2026-04-24 10:56:06 [DEBUG]
- srv    load_model: speculative decoding not supported by this context
-slot   load_model: id  0 | task -1 | new slot, n_ctx = 60160
-slot   load_model: id  1 | task -1 | new slot, n_ctx = 60160
-slot   load_model: id  2 | task -1 | new slot, n_ctx = 60160
-slot   load_model: id  3 | task -1 | new slot, n_ctx = 60160
-srv    load_model: prompt cache is enabled, size limit: 8192 MiB
-srv    load_model: use `--cache-ram 0` to disable the prompt cache
-srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/16391
-2026-04-24 10:56:06 [DEBUG]
- srv          init: init: idle slots will be saved to prompt cache and cleared upon starting a new task
-2026-04-24 10:56:06 [DEBUG]
- init: chat template, example_format: 'You are a helpful assistantHelloHi thereHow are you?'
-2026-04-24 10:56:06 [DEBUG]
- srv          init: init: chat template, thinking = 0
-2026-04-24 10:56:06 [DEBUG]
- srv  update_slots: all slots are idle
-2026-04-24 11:31:40 [DEBUG]
+2026-04-25 13:08:17 [DEBUG]
  Received request: POST to /v1/chat/completions with body  {
   "model": "qwen/qwen3.5-9b",
   "messages": [
     {
       "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
     },
     {
       "role": "user",
-      "content": "明天成都的天气怎么样？"
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
+    },
+    {
+      "role": "user",
+      "content": "你好"
     }
   ],
   "tools": [
@@ -439,7 +148,7 @@ srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/
       "type": "function",
       "function": {
         "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
         "parameters": {
           "type": "object",
           "properties": {
@@ -498,97 +207,76 @@ srv    load_model: for more info see https://github.com/ggml-org/llama.cpp/pull/
   "temperature": 0.6,
   "stream": true
 }
-2026-04-24 11:31:40  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 2 messages.
-2026-04-24 11:31:40  [INFO]
+2026-04-25 13:08:17  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 4 messages.
+2026-04-25 13:08:17  [INFO]
  [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:31:40 [DEBUG]
+2026-04-25 13:08:17 [DEBUG]
  LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:31:40 [DEBUG]
- slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = -1
-srv  get_availabl: updating prompt cache
-srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
-srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 60160 tokens, 8589934592 est)
-srv  get_availabl: prompt cache update took 0.01 ms
-2026-04-24 11:31:40 [DEBUG]
+2026-04-25 13:08:17 [DEBUG]
+ slot get_availabl: id  3 | task -1 | selected slot by LCP similarity, sim_best = 0.950 (> 0.100 thold), f_keep = 0.957
+2026-04-25 13:08:17 [DEBUG]
  slot launch_slot_: id  3 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  3 | task 0 | processing task, is_child = 0
-slot update_slots: id  3 | task 0 | new prompt, n_ctx_slot = 60160, n_keep = 1337, task.n_tokens = 1337
-slot update_slots: id  3 | task 0 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  3 | task 0 | n_tokens = 0, memory_seq_rm [0, end)
-slot update_slots: id  3 | task 0 | prompt processing progress, n_tokens = 512, batch.n_tokens = 512, progress = 0.382947
-2026-04-24 11:31:40  [INFO]
+slot launch_slot_: id  3 | task 68 | processing task, is_child = 0
+slot update_slots: id  3 | task 68 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 1580
+slot update_slots: id  3 | task 68 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  3 | task 68 | n_past = 1501, slot.prompt.tokens.size() = 1568, seq_id = 3, pos_min = 1567, n_swa = 0
+slot update_slots: id  3 | task 68 | Checking checkpoint with [1500, 1500] against 1501...
+2026-04-25 13:08:17 [DEBUG]
+ slot update_slots: id  3 | task 68 | restored context checkpoint (pos_min = 1500, pos_max = 1500, n_tokens = 1501, n_past = 1501, size = 50.251 MiB)
+slot update_slots: id  3 | task 68 | n_tokens = 1501, memory_seq_rm [1501, end)
+slot update_slots: id  3 | task 68 | prompt processing progress, n_tokens = 1576, batch.n_tokens = 75, progress = 0.997468
+2026-04-25 13:08:17  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:31:42 [DEBUG]
- slot update_slots: id  3 | task 0 | n_tokens = 512, memory_seq_rm [512, end)
-2026-04-24 11:31:42 [DEBUG]
- slot update_slots: id  3 | task 0 | prompt processing progress, n_tokens = 825, batch.n_tokens = 313, progress = 0.617053
-2026-04-24 11:31:42  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 38.3%
-2026-04-24 11:31:43 [DEBUG]
- slot update_slots: id  3 | task 0 | n_tokens = 825, memory_seq_rm [825, end)
-slot update_slots: id  3 | task 0 | prompt processing progress, n_tokens = 1333, batch.n_tokens = 508, progress = 0.997008
-2026-04-24 11:31:43  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 61.7%
-2026-04-24 11:31:43 [DEBUG]
- slot update_slots: id  3 | task 0 | created context checkpoint 1 of 32 (pos_min = 824, pos_max = 824, n_tokens = 825, size = 50.251 MiB)
-2026-04-24 11:31:46 [DEBUG]
- slot update_slots: id  3 | task 0 | n_tokens = 1333, memory_seq_rm [1333, end)
-2026-04-24 11:31:46 [DEBUG]
- slot init_sampler: id  3 | task 0 | init sampler, took 0.20 ms, tokens: text = 1337, total = 1337
-slot update_slots: id  3 | task 0 | prompt processing done, n_tokens = 1337, batch.n_tokens = 4
-2026-04-24 11:31:46 [DEBUG]
- slot update_slots: id  3 | task 0 | created context checkpoint 2 of 32 (pos_min = 1332, pos_max = 1332, n_tokens = 1333, size = 50.251 MiB)
-2026-04-24 11:31:46  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 99.7%
-2026-04-24 11:31:46  [INFO]
+2026-04-25 13:08:18 [DEBUG]
+ slot update_slots: id  3 | task 68 | n_tokens = 1576, memory_seq_rm [1576, end)
+2026-04-25 13:08:18 [DEBUG]
+ slot init_sampler: id  3 | task 68 | init sampler, took 0.23 ms, tokens: text = 1580, total = 1580
+slot update_slots: id  3 | task 68 | prompt processing done, n_tokens = 1580, batch.n_tokens = 4
+2026-04-25 13:08:18  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 94.9%
+2026-04-25 13:08:18 [DEBUG]
+ slot update_slots: id  3 | task 68 | created context checkpoint 3 of 32 (pos_min = 1575, pos_max = 1575, n_tokens = 1576, size = 50.251 MiB)
+2026-04-25 13:08:18  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
-2026-04-24 11:31:56 [DEBUG]
- slot print_timing: id  3 | task 0 | 
-prompt eval time =    5755.75 ms /  1337 tokens (    4.30 ms per token,   232.29 tokens per second)
-       eval time =    9822.30 ms /   130 tokens (   75.56 ms per token,    13.24 tokens per second)
-      total time =   15578.06 ms /  1467 tokens
-2026-04-24 11:31:56 [DEBUG]
- slot      release: id  3 | task 0 | stop processing: n_tokens = 1466, truncated = 0
+2026-04-25 13:08:22 [DEBUG]
+ slot print_timing: id  3 | task 68 | 
+prompt eval time =    1378.20 ms /    79 tokens (   17.45 ms per token,    57.32 tokens per second)
+       eval time =    3540.51 ms /    30 tokens (  118.02 ms per token,     8.47 tokens per second)
+      total time =    4918.71 ms /   109 tokens
+slot      release: id  3 | task 68 | stop processing: n_tokens = 1609, truncated = 0
 srv  update_slots: all slots are idle
-2026-04-24 11:31:56 [DEBUG]
- LlamaV4: server assigned slot 3 to task 0
-2026-04-24 11:31:56  [INFO]
+2026-04-25 13:08:22 [DEBUG]
+ LlamaV4: server assigned slot 3 to task 68
+2026-04-25 13:08:22  [INFO]
  [qwen/qwen3.5-9b] Finished streaming response
-2026-04-24 11:31:59 [DEBUG]
+2026-04-25 13:08:39 [DEBUG]
  Received request: POST to /v1/chat/completions with body  {
   "model": "qwen/qwen3.5-9b",
   "messages": [
     {
       "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
     },
     {
       "role": "user",
-      "content": "明天成都的天气怎么样？"
+      "content": "你好"
     },
     {
       "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "175143857",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "175143857",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
     },
     {
       "role": "user",
-      "content": "明天成都的天气怎么样？"
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
+    },
+    {
+      "role": "user",
+      "content": "你好"
     }
   ],
   "tools": [
@@ -720,7 +408,7 @@ srv  update_slots: all slots are idle
       "type": "function",
       "function": {
         "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
         "parameters": {
           "type": "object",
           "properties": {
@@ -774,106 +462,748 @@ srv  update_slots: all slots are idle
       }
     }
   ],
-  "tool_choice": "none",
+  "tool_choice": "auto",
   "max_tokens": 4096,
   "temperature": 0.6,
   "stream": true
 }
-2026-04-24 11:31:59  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 5 messages.
-2026-04-24 11:31:59  [INFO]
+2026-04-25 13:08:39  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 6 messages.
+2026-04-25 13:08:39  [INFO]
  [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:31:59 [DEBUG]
+2026-04-25 13:08:39 [DEBUG]
  LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:31:59 [DEBUG]
+2026-04-25 13:08:39 [DEBUG]
+ slot get_availabl: id  3 | task -1 | selected slot by LCP similarity, sim_best = 0.973 (> 0.100 thold), f_keep = 0.979
+2026-04-25 13:08:39 [DEBUG]
+ slot launch_slot_: id  3 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+slot launch_slot_: id  3 | task 100 | processing task, is_child = 0
+slot update_slots: id  3 | task 100 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 1620
+slot update_slots: id  3 | task 100 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  3 | task 100 | n_past = 1576, slot.prompt.tokens.size() = 1609, seq_id = 3, pos_min = 1608, n_swa = 0
+slot update_slots: id  3 | task 100 | Checking checkpoint with [1575, 1575] against 1576...
+2026-04-25 13:08:39 [DEBUG]
+ slot update_slots: id  3 | task 100 | restored context checkpoint (pos_min = 1575, pos_max = 1575, n_tokens = 1576, n_past = 1576, size = 50.251 MiB)
+slot update_slots: id  3 | task 100 | n_tokens = 1576, memory_seq_rm [1576, end)
+slot update_slots: id  3 | task 100 | prompt processing progress, n_tokens = 1616, batch.n_tokens = 40, progress = 0.997531
+2026-04-25 13:08:39  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
+2026-04-25 13:08:40 [DEBUG]
+ slot update_slots: id  3 | task 100 | n_tokens = 1616, memory_seq_rm [1616, end)
+2026-04-25 13:08:40 [DEBUG]
+ slot init_sampler: id  3 | task 100 | init sampler, took 0.21 ms, tokens: text = 1620, total = 1620
+slot update_slots: id  3 | task 100 | prompt processing done, n_tokens = 1620, batch.n_tokens = 4
+2026-04-25 13:08:40  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 90.9%
+2026-04-25 13:08:40  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
+2026-04-25 13:08:48 [DEBUG]
+ slot print_timing: id  3 | task 100 | 
+prompt eval time =    1044.17 ms /    44 tokens (   23.73 ms per token,    42.14 tokens per second)
+       eval time =    7942.17 ms /    64 tokens (  124.10 ms per token,     8.06 tokens per second)
+      total time =    8986.35 ms /   108 tokens
+slot      release: id  3 | task 100 | stop processing: n_tokens = 1683, truncated = 0
+srv  update_slots: all slots are idle
+2026-04-25 13:08:48 [DEBUG]
+ LlamaV4: server assigned slot 3 to task 100
+2026-04-25 13:08:48  [INFO]
+ [qwen/qwen3.5-9b] Finished streaming response
+2026-04-25 13:08:59 [DEBUG]
+ Received request: POST to /v1/chat/completions with body  {
+  "model": "qwen/qwen3.5-9b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_directory",
+        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要列出的目录路径"
+            }
+          },
+          "required": [
+            "directory_path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "rename_file",
+        "description": "修改某个目录下某个文件的名字",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "old_filename": {
+              "type": "string",
+              "description": "旧文件名"
+            },
+            "new_filename": {
+              "type": "string",
+              "description": "新文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "old_filename",
+            "new_filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "delete_file",
+        "description": "删除某个目录下某个文件",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要删除的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_file",
+        "description": "在某个目录下新建一个文件，并且写入内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要创建文件的目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要创建的文件名"
+            },
+            "content": {
+              "type": "string",
+              "description": "要写入文件的内容"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "read_file",
+        "description": "读取某个目录下面的某个文件的内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要读取的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "curl",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "要访问的网页URL"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_chat_history",
+        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "anythingllm_query",
+        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
+            }
+          },
+          "required": [
+            "message"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "max_tokens": 4096,
+  "temperature": 0.6,
+  "stream": true
+}
+2026-04-25 13:08:59  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 8 messages.
+2026-04-25 13:08:59  [INFO]
+ [qwen/qwen3.5-9b] Streaming response...
+2026-04-25 13:08:59 [DEBUG]
+ LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
+2026-04-25 13:08:59 [DEBUG]
+ slot get_availabl: id  3 | task -1 | selected slot by LCP similarity, sim_best = 0.953 (> 0.100 thold), f_keep = 0.960
+2026-04-25 13:08:59 [DEBUG]
+ slot launch_slot_: id  3 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+slot launch_slot_: id  3 | task 166 | processing task, is_child = 0
+slot update_slots: id  3 | task 166 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 1695
+slot update_slots: id  3 | task 166 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  3 | task 166 | n_past = 1616, slot.prompt.tokens.size() = 1683, seq_id = 3, pos_min = 1682, n_swa = 0
+slot update_slots: id  3 | task 166 | Checking checkpoint with [1575, 1575] against 1616...
+2026-04-25 13:08:59 [DEBUG]
+ slot update_slots: id  3 | task 166 | restored context checkpoint (pos_min = 1575, pos_max = 1575, n_tokens = 1576, n_past = 1576, size = 50.251 MiB)
+slot update_slots: id  3 | task 166 | n_tokens = 1576, memory_seq_rm [1576, end)
+slot update_slots: id  3 | task 166 | prompt processing progress, n_tokens = 1691, batch.n_tokens = 115, progress = 0.997640
+2026-04-25 13:08:59  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
+2026-04-25 13:09:00 [DEBUG]
+ slot update_slots: id  3 | task 166 | n_tokens = 1691, memory_seq_rm [1691, end)
+2026-04-25 13:09:00 [DEBUG]
+ slot init_sampler: id  3 | task 166 | init sampler, took 0.26 ms, tokens: text = 1695, total = 1695
+slot update_slots: id  3 | task 166 | prompt processing done, n_tokens = 1695, batch.n_tokens = 4
+2026-04-25 13:09:00  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 96.6%
+2026-04-25 13:09:00 [DEBUG]
+ slot update_slots: id  3 | task 166 | created context checkpoint 4 of 32 (pos_min = 1690, pos_max = 1690, n_tokens = 1691, size = 50.251 MiB)
+2026-04-25 13:09:01  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
+2026-04-25 13:09:09 [DEBUG]
+ slot print_timing: id  3 | task 166 | 
+prompt eval time =    1575.93 ms /   119 tokens (   13.24 ms per token,    75.51 tokens per second)
+       eval time =    7974.12 ms /    64 tokens (  124.60 ms per token,     8.03 tokens per second)
+      total time =    9550.05 ms /   183 tokens
+slot      release: id  3 | task 166 | stop processing: n_tokens = 1758, truncated = 0
+srv  update_slots: all slots are idle
+2026-04-25 13:09:09 [DEBUG]
+ LlamaV4: server assigned slot 3 to task 166
+2026-04-25 13:09:09  [INFO]
+ [qwen/qwen3.5-9b] Finished streaming response
+2026-04-25 13:09:18 [DEBUG]
+ Received request: POST to /v1/chat/completions with body  {
+  "model": "qwen/qwen3.5-9b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息  \n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_directory",
+        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要列出的目录路径"
+            }
+          },
+          "required": [
+            "directory_path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "rename_file",
+        "description": "修改某个目录下某个文件的名字",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "old_filename": {
+              "type": "string",
+              "description": "旧文件名"
+            },
+            "new_filename": {
+              "type": "string",
+              "description": "新文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "old_filename",
+            "new_filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "delete_file",
+        "description": "删除某个目录下某个文件",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要删除的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_file",
+        "description": "在某个目录下新建一个文件，并且写入内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要创建文件的目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要创建的文件名"
+            },
+            "content": {
+              "type": "string",
+              "description": "要写入文件的内容"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "read_file",
+        "description": "读取某个目录下面的某个文件的内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要读取的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "curl",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "要访问的网页URL"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_chat_history",
+        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "anythingllm_query",
+        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
+            }
+          },
+          "required": [
+            "message"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "max_tokens": 4096,
+  "temperature": 0.6,
+  "stream": true
+}
+2026-04-25 13:09:18  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 10 messages.
+2026-04-25 13:09:18  [INFO]
+ [qwen/qwen3.5-9b] Streaming response...
+2026-04-25 13:09:18 [DEBUG]
+ LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
+2026-04-25 13:09:18 [DEBUG]
+ slot get_availabl: id  3 | task -1 | selected slot by LCP similarity, sim_best = 0.955 (> 0.100 thold), f_keep = 0.962
+2026-04-25 13:09:18 [DEBUG]
+ slot launch_slot_: id  3 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+slot launch_slot_: id  3 | task 232 | processing task, is_child = 0
+slot update_slots: id  3 | task 232 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 1770
+slot update_slots: id  3 | task 232 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  3 | task 232 | n_past = 1691, slot.prompt.tokens.size() = 1758, seq_id = 3, pos_min = 1757, n_swa = 0
+slot update_slots: id  3 | task 232 | Checking checkpoint with [1690, 1690] against 1691...
+2026-04-25 13:09:18 [DEBUG]
+ slot update_slots: id  3 | task 232 | restored context checkpoint (pos_min = 1690, pos_max = 1690, n_tokens = 1691, n_past = 1691, size = 50.251 MiB)
+slot update_slots: id  3 | task 232 | n_tokens = 1691, memory_seq_rm [1691, end)
+slot update_slots: id  3 | task 232 | prompt processing progress, n_tokens = 1766, batch.n_tokens = 75, progress = 0.997740
+2026-04-25 13:09:18  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
+2026-04-25 13:09:19 [DEBUG]
+ slot update_slots: id  3 | task 232 | n_tokens = 1766, memory_seq_rm [1766, end)
+2026-04-25 13:09:19 [DEBUG]
+ slot init_sampler: id  3 | task 232 | init sampler, took 0.24 ms, tokens: text = 1770, total = 1770
+slot update_slots: id  3 | task 232 | prompt processing done, n_tokens = 1770, batch.n_tokens = 4
+2026-04-25 13:09:19  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 94.9%
+2026-04-25 13:09:19 [DEBUG]
+ slot update_slots: id  3 | task 232 | created context checkpoint 5 of 32 (pos_min = 1765, pos_max = 1765, n_tokens = 1766, size = 50.251 MiB)
+2026-04-25 13:09:19  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
+2026-04-25 13:09:27 [DEBUG]
+ slot print_timing: id  3 | task 232 | 
+prompt eval time =    1325.89 ms /    79 tokens (   16.78 ms per token,    59.58 tokens per second)
+       eval time =    7970.94 ms /    64 tokens (  124.55 ms per token,     8.03 tokens per second)
+      total time =    9296.83 ms /   143 tokens
+slot      release: id  3 | task 232 | stop processing: n_tokens = 1833, truncated = 0
+srv  update_slots: all slots are idle
+2026-04-25 13:09:27 [DEBUG]
+ LlamaV4: server assigned slot 3 to task 232
+2026-04-25 13:09:27  [INFO]
+ [qwen/qwen3.5-9b] Finished streaming response
+2026-04-25 13:09:29 [DEBUG]
+ Received request: POST to /v1/chat/completions with body  {
+  "model": "qwen/qwen3.5-9b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个专业的信息提取助手。请直接输出 5W 结果，不要输出任何思考过程、分析步骤或额外说明。"
+    },
+    {
+      "role": "user",
+      "content": "请分析以下对话内容，按照 5W 规则提取关键信息。\n\n【对话内容】（共10条消息）\n1. 用户: 你... <Truncated in logs> ...出示例 - 无法提取】\n【无法提取】对话内容可提取的信息太少，没有值得提取的关键信息\n\n【开始提取】"
+    }
+  ],
+  "max_tokens": 4096,
+  "temperature": 0.5,
+  "stream": false
+}
+2026-04-25 13:09:29  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 2 messages.
+2026-04-25 13:09:29 [DEBUG]
+ LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
+2026-04-25 13:09:29 [DEBUG]
  slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = -1
 srv  get_availabl: updating prompt cache
 srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
-srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 60160 tokens, 8589934592 est)
+srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 18688 tokens, 8589934592 est)
 srv  get_availabl: prompt cache update took 0.01 ms
 slot launch_slot_: id  2 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  2 | task 134 | processing task, is_child = 0
+slot launch_slot_: id  2 | task 298 | processing task, is_child = 0
 slot slot_save_an: id  3 | task -1 | saving idle slot to prompt cache
-2026-04-24 11:31:59 [DEBUG]
- srv   prompt_save:  - saving prompt with length 1466, total state size = 64.595 MiB
-2026-04-24 11:32:00 [DEBUG]
- slot prompt_clear: id  3 | task -1 | clearing prompt with 1466 tokens
-srv        update:  - cache state: 1 prompts, 165.096 MiB (limits: 8192.000 MiB, 60160 tokens, 72742 est)
-srv        update:    - prompt 00000371D0FD5F00:    1466 tokens, checkpoints:  2,   165.096 MiB
-slot update_slots: id  2 | task 134 | new prompt, n_ctx_slot = 60160, n_keep = 174, task.n_tokens = 607
-slot update_slots: id  2 | task 134 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  2 | task 134 | n_tokens = 0, memory_seq_rm [0, end)
-slot update_slots: id  2 | task 134 | prompt processing progress, n_tokens = 95, batch.n_tokens = 95, progress = 0.156507
-2026-04-24 11:32:00  [INFO]
+srv   prompt_save:  - saving prompt with length 1833, total state size = 68.186 MiB
+2026-04-25 13:09:29 [DEBUG]
+ slot prompt_clear: id  3 | task -1 | clearing prompt with 1833 tokens
+2026-04-25 13:09:29 [DEBUG]
+ srv        update:  - cache state: 1 prompts, 319.439 MiB (limits: 8192.000 MiB, 18688 tokens, 47007 est)
+srv        update:    - prompt 000002A40B65C580:    1833 tokens, checkpoints:  5,   319.439 MiB
+slot update_slots: id  2 | task 298 | new prompt, n_ctx_slot = 18688, n_keep = 864, task.n_tokens = 864
+slot update_slots: id  2 | task 298 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  2 | task 298 | n_tokens = 0, memory_seq_rm [0, end)
+slot update_slots: id  2 | task 298 | prompt processing progress, n_tokens = 352, batch.n_tokens = 352, progress = 0.407407
+2026-04-25 13:09:29  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:32:00 [DEBUG]
- slot update_slots: id  2 | task 134 | n_tokens = 95, memory_seq_rm [95, end)
-2026-04-24 11:32:00 [DEBUG]
- slot update_slots: id  2 | task 134 | prompt processing progress, n_tokens = 603, batch.n_tokens = 508, progress = 0.993410
-2026-04-24 11:32:00  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 15.7%
-2026-04-24 11:32:00 [DEBUG]
- slot update_slots: id  2 | task 134 | created context checkpoint 1 of 32 (pos_min = 94, pos_max = 94, n_tokens = 95, size = 50.251 MiB)
-2026-04-24 11:32:02 [DEBUG]
- slot update_slots: id  2 | task 134 | n_tokens = 603, memory_seq_rm [603, end)
-2026-04-24 11:32:02 [DEBUG]
- slot init_sampler: id  2 | task 134 | init sampler, took 0.10 ms, tokens: text = 607, total = 607
-slot update_slots: id  2 | task 134 | prompt processing done, n_tokens = 607, batch.n_tokens = 4
-2026-04-24 11:32:02  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 99.3%
-2026-04-24 11:32:02 [DEBUG]
- slot update_slots: id  2 | task 134 | created context checkpoint 2 of 32 (pos_min = 602, pos_max = 602, n_tokens = 603, size = 50.251 MiB)
-2026-04-24 11:32:02  [INFO]
+2026-04-25 13:09:31 [DEBUG]
+ slot update_slots: id  2 | task 298 | n_tokens = 352, memory_seq_rm [352, end)
+slot update_slots: id  2 | task 298 | prompt processing progress, n_tokens = 860, batch.n_tokens = 508, progress = 0.995370
+2026-04-25 13:09:31  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 40.7%
+2026-04-25 13:09:31 [DEBUG]
+ slot update_slots: id  2 | task 298 | created context checkpoint 1 of 32 (pos_min = 351, pos_max = 351, n_tokens = 352, size = 50.251 MiB)
+2026-04-25 13:09:33 [DEBUG]
+ slot update_slots: id  2 | task 298 | n_tokens = 860, memory_seq_rm [860, end)
+2026-04-25 13:09:33 [DEBUG]
+ slot init_sampler: id  2 | task 298 | init sampler, took 0.12 ms, tokens: text = 864, total = 864
+slot update_slots: id  2 | task 298 | prompt processing done, n_tokens = 864, batch.n_tokens = 4
+2026-04-25 13:09:33  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 99.5%
+2026-04-25 13:09:33 [DEBUG]
+ slot update_slots: id  2 | task 298 | created context checkpoint 2 of 32 (pos_min = 859, pos_max = 859, n_tokens = 860, size = 50.251 MiB)
+2026-04-25 13:09:33  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
-2026-04-24 11:32:48 [DEBUG]
- slot print_timing: id  2 | task 134 | 
-prompt eval time =    2406.04 ms /   607 tokens (    3.96 ms per token,   252.28 tokens per second)
-       eval time =   45809.43 ms /   421 tokens (  108.81 ms per token,     9.19 tokens per second)
-      total time =   48215.46 ms /  1028 tokens
-slot      release: id  2 | task 134 | stop processing: n_tokens = 1027, truncated = 0
+2026-04-25 13:09:35 [DEBUG]
+ slot print_timing: id  2 | task 298 | 
+prompt eval time =    3821.34 ms /   864 tokens (    4.42 ms per token,   226.10 tokens per second)
+       eval time =    1747.90 ms /    17 tokens (  102.82 ms per token,     9.73 tokens per second)
+      total time =    5569.24 ms /   881 tokens
+slot      release: id  2 | task 298 | stop processing: n_tokens = 880, truncated = 0
 srv  update_slots: all slots are idle
-2026-04-24 11:32:48 [DEBUG]
- LlamaV4: server assigned slot 2 to task 134
-2026-04-24 11:32:48  [INFO]
- [qwen/qwen3.5-9b] Finished streaming response
-2026-04-24 11:33:35 [DEBUG]
+2026-04-25 13:09:35 [DEBUG]
+ LlamaV4: server assigned slot 2 to task 298
+2026-04-25 13:09:35  [INFO]
+ [qwen/qwen3.5-9b] Model generated tool calls:  []
+2026-04-25 13:09:35  [INFO]
+ [qwen/qwen3.5-9b] Generated prediction:  {
+  "id": "chatcmpl-z2ad9b3egw9yg7g6n3rn",
+  "object": "chat.completion",
+  "created": 1777093769,
+  "model": "qwen/qwen3.5-9b",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "【无法提取】对话内容可提取的信息太少，没有值得提取的关键信息",
+        "reasoning_content": "",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 864,
+    "completion_tokens": 17,
+    "total_tokens": 881,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "stats": {},
+  "system_fingerprint": "qwen/qwen3.5-9b"
+}
+2026-04-25 13:09:44 [DEBUG]
  Received request: POST to /v1/chat/completions with body  {
   "model": "qwen/qwen3.5-9b",
   "messages": [
     {
       "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
     },
     {
       "role": "user",
-      "content": "明天成都的天气怎么样？"
+      "content": "你好"
     },
     {
       "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "175143857",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "175143857",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n根据查询到的成都天气预报，明天的天气情况如下：\n\n## 🌤️ 整体概况\n- **平均温度**：... <Truncated in logs> ...建议穿短袖或轻薄衣物\n- ☔ 全天无降水，无需带雨具\n\n明天成都天气不错，是个适合出门的好日子！😊"
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
     },
     {
       "role": "user",
-      "content": "明天多少号呢？你就查"
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息  \n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
     }
   ],
   "tools": [
@@ -1005,7 +1335,7 @@ srv  update_slots: all slots are idle
       "type": "function",
       "function": {
         "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
         "parameters": {
           "type": "object",
           "properties": {
@@ -1064,128 +1394,120 @@ srv  update_slots: all slots are idle
   "temperature": 0.6,
   "stream": true
 }
-2026-04-24 11:33:35  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 6 messages.
-2026-04-24 11:33:35  [INFO]
+2026-04-25 13:09:44  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 12 messages.
+2026-04-25 13:09:44  [INFO]
  [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:33:35 [DEBUG]
+2026-04-25 13:09:44 [DEBUG]
  LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:33:35 [DEBUG]
+2026-04-25 13:09:44 [DEBUG]
  slot get_availabl: id  1 | task -1 | selected slot by LRU, t_last = -1
 srv  get_availabl: updating prompt cache
 srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
-srv          load:  - found better prompt with f_keep = 0.911, sim = 0.643
-2026-04-24 11:33:35 [DEBUG]
- srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 60160 tokens, 8589934592 est)
-srv  get_availabl: prompt cache update took 56.27 ms
+srv          load:  - found better prompt with f_keep = 0.963, sim = 0.957
+2026-04-25 13:09:44 [DEBUG]
+ srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 18688 tokens, 8589934592 est)
+srv  get_availabl: prompt cache update took 38.16 ms
 slot launch_slot_: id  1 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  1 | task 558 | processing task, is_child = 0
+slot launch_slot_: id  1 | task 318 | processing task, is_child = 0
 slot slot_save_an: id  2 | task -1 | saving idle slot to prompt cache
-srv   prompt_save:  - saving prompt with length 1027, total state size = 60.300 MiB
-2026-04-24 11:33:35 [DEBUG]
- slot prompt_clear: id  2 | task -1 | clearing prompt with 1027 tokens
-srv        update:  - cache state: 1 prompts, 160.801 MiB (limits: 8192.000 MiB, 60160 tokens, 60160 est)
-srv        update:    - prompt 00000371D0FD5F00:    1027 tokens, checkpoints:  2,   160.801 MiB
-slot update_slots: id  1 | task 558 | new prompt, n_ctx_slot = 60160, n_keep = 1337, task.n_tokens = 2075
-slot update_slots: id  1 | task 558 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  1 | task 558 | n_past = 1335, slot.prompt.tokens.size() = 1466, seq_id = 1, pos_min = 1465, n_swa = 0
-slot update_slots: id  1 | task 558 | Checking checkpoint with [1332, 1332] against 1335...
-2026-04-24 11:33:35 [DEBUG]
- slot update_slots: id  1 | task 558 | restored context checkpoint (pos_min = 1332, pos_max = 1332, n_tokens = 1333, n_past = 1333, size = 50.251 MiB)
-slot update_slots: id  1 | task 558 | n_tokens = 1333, memory_seq_rm [1333, end)
-slot update_slots: id  1 | task 558 | prompt processing progress, n_tokens = 1563, batch.n_tokens = 230, progress = 0.753253
-2026-04-24 11:33:35  [INFO]
+srv   prompt_save:  - saving prompt with length 880, total state size = 58.861 MiB
+2026-04-25 13:09:44 [DEBUG]
+ slot prompt_clear: id  2 | task -1 | clearing prompt with 880 tokens
+srv        update:  - cache state: 1 prompts, 159.362 MiB (limits: 8192.000 MiB, 18688 tokens, 45236 est)
+srv        update:    - prompt 000002A40B65D4D0:     880 tokens, checkpoints:  2,   159.362 MiB
+2026-04-25 13:09:44 [DEBUG]
+ slot update_slots: id  1 | task 318 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 1845
+slot update_slots: id  1 | task 318 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  1 | task 318 | n_past = 1766, slot.prompt.tokens.size() = 1833, seq_id = 1, pos_min = 1832, n_swa = 0
+slot update_slots: id  1 | task 318 | Checking checkpoint with [1765, 1765] against 1766...
+2026-04-25 13:09:44 [DEBUG]
+ slot update_slots: id  1 | task 318 | restored context checkpoint (pos_min = 1765, pos_max = 1765, n_tokens = 1766, n_past = 1766, size = 50.251 MiB)
+slot update_slots: id  1 | task 318 | n_tokens = 1766, memory_seq_rm [1766, end)
+slot update_slots: id  1 | task 318 | prompt processing progress, n_tokens = 1841, batch.n_tokens = 75, progress = 0.997832
+2026-04-25 13:09:44  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:33:37 [DEBUG]
- slot update_slots: id  1 | task 558 | n_tokens = 1563, memory_seq_rm [1563, end)
-slot update_slots: id  1 | task 558 | prompt processing progress, n_tokens = 2071, batch.n_tokens = 508, progress = 0.998072
-2026-04-24 11:33:37  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 31.0%
-2026-04-24 11:33:37 [DEBUG]
- slot update_slots: id  1 | task 558 | created context checkpoint 3 of 32 (pos_min = 1562, pos_max = 1562, n_tokens = 1563, size = 50.251 MiB)
-2026-04-24 11:33:40 [DEBUG]
- slot update_slots: id  1 | task 558 | n_tokens = 2071, memory_seq_rm [2071, end)
-2026-04-24 11:33:40  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 99.5%
-2026-04-24 11:33:40 [DEBUG]
- slot init_sampler: id  1 | task 558 | init sampler, took 0.32 ms, tokens: text = 2075, total = 2075
-slot update_slots: id  1 | task 558 | prompt processing done, n_tokens = 2075, batch.n_tokens = 4
-2026-04-24 11:33:40 [DEBUG]
- slot update_slots: id  1 | task 558 | created context checkpoint 4 of 32 (pos_min = 2070, pos_max = 2070, n_tokens = 2071, size = 50.251 MiB)
-2026-04-24 11:33:41  [INFO]
+2026-04-25 13:09:45 [DEBUG]
+ slot update_slots: id  1 | task 318 | n_tokens = 1841, memory_seq_rm [1841, end)
+2026-04-25 13:09:45 [DEBUG]
+ slot init_sampler: id  1 | task 318 | init sampler, took 0.27 ms, tokens: text = 1845, total = 1845
+slot update_slots: id  1 | task 318 | prompt processing done, n_tokens = 1845, batch.n_tokens = 4
+2026-04-25 13:09:45  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 94.9%
+2026-04-25 13:09:45 [DEBUG]
+ slot update_slots: id  1 | task 318 | created context checkpoint 6 of 32 (pos_min = 1840, pos_max = 1840, n_tokens = 1841, size = 50.251 MiB)
+2026-04-25 13:09:45  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
-2026-04-24 11:34:50 [DEBUG]
- slot print_timing: id  1 | task 558 | 
-prompt eval time =    5796.89 ms /   742 tokens (    7.81 ms per token,   128.00 tokens per second)
-       eval time =   68969.72 ms /   258 tokens (  267.32 ms per token,     3.74 tokens per second)
-      total time =   74766.61 ms /  1000 tokens
-slot      release: id  1 | task 558 | stop processing: n_tokens = 2332, truncated = 0
+2026-04-25 13:09:50 [DEBUG]
+ slot print_timing: id  1 | task 318 | 
+prompt eval time =    1526.34 ms /    79 tokens (   19.32 ms per token,    51.76 tokens per second)
+       eval time =    4505.90 ms /    37 tokens (  121.78 ms per token,     8.21 tokens per second)
+      total time =    6032.24 ms /   116 tokens
+slot      release: id  1 | task 318 | stop processing: n_tokens = 1881, truncated = 0
 srv  update_slots: all slots are idle
-2026-04-24 11:34:50 [DEBUG]
- LlamaV4: server assigned slot 1 to task 558
-2026-04-24 11:34:50  [INFO]
+2026-04-25 13:09:50 [DEBUG]
+ LlamaV4: server assigned slot 1 to task 318
+2026-04-25 13:09:50  [INFO]
  [qwen/qwen3.5-9b] Finished streaming response
-2026-04-24 11:34:59 [DEBUG]
+2026-04-25 13:09:59 [DEBUG]
  Received request: POST to /v1/chat/completions with body  {
   "model": "qwen/qwen3.5-9b",
   "messages": [
     {
       "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
     },
     {
       "role": "user",
-      "content": "明天成都的天气怎么样？"
+      "content": "你好"
     },
     {
       "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "175143857",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "175143857",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n根据查询到的成都天气预报，明天的天气情况如下：\n\n## 🌤️ 整体概况\n- **平均温度**：... <Truncated in logs> ...建议穿短袖或轻薄衣物\n- ☔ 全天无降水，无需带雨具\n\n明天成都天气不错，是个适合出门的好日子！😊"
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
     },
     {
       "role": "user",
-      "content": "明天多少号呢？你就查"
+      "content": "你好"
     },
     {
       "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "527009895",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "527009895",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
     },
     {
       "role": "user",
-      "content": "明天多少号呢？你就查"
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息  \n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
     }
   ],
   "tools": [
@@ -1317,7 +1639,7 @@ srv  update_slots: all slots are idle
       "type": "function",
       "function": {
         "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
         "parameters": {
           "type": "object",
           "properties": {
@@ -1371,1398 +1693,1188 @@ srv  update_slots: all slots are idle
       }
     }
   ],
-  "tool_choice": "none",
+  "tool_choice": "auto",
   "max_tokens": 4096,
   "temperature": 0.6,
   "stream": true
 }
-2026-04-24 11:34:59  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 9 messages.
-2026-04-24 11:34:59  [INFO]
+2026-04-25 13:09:59  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 14 messages.
+2026-04-25 13:09:59  [INFO]
  [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:34:59 [DEBUG]
+2026-04-25 13:09:59 [DEBUG]
  LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:34:59 [DEBUG]
+2026-04-25 13:09:59 [DEBUG]
+ slot get_availabl: id  1 | task -1 | selected slot by LCP similarity, sim_best = 0.973 (> 0.100 thold), f_keep = 0.979
+2026-04-25 13:09:59 [DEBUG]
+ slot launch_slot_: id  1 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+slot launch_slot_: id  1 | task 357 | processing task, is_child = 0
+slot update_slots: id  1 | task 357 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 1892
+slot update_slots: id  1 | task 357 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  1 | task 357 | n_past = 1841, slot.prompt.tokens.size() = 1881, seq_id = 1, pos_min = 1880, n_swa = 0
+slot update_slots: id  1 | task 357 | Checking checkpoint with [1840, 1840] against 1841...
+2026-04-25 13:09:59 [DEBUG]
+ slot update_slots: id  1 | task 357 | restored context checkpoint (pos_min = 1840, pos_max = 1840, n_tokens = 1841, n_past = 1841, size = 50.251 MiB)
+slot update_slots: id  1 | task 357 | n_tokens = 1841, memory_seq_rm [1841, end)
+slot update_slots: id  1 | task 357 | prompt processing progress, n_tokens = 1888, batch.n_tokens = 47, progress = 0.997886
+2026-04-25 13:09:59  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
+2026-04-25 13:10:00 [DEBUG]
+ slot update_slots: id  1 | task 357 | n_tokens = 1888, memory_seq_rm [1888, end)
+2026-04-25 13:10:00 [DEBUG]
+ slot init_sampler: id  1 | task 357 | init sampler, took 0.24 ms, tokens: text = 1892, total = 1892
+slot update_slots: id  1 | task 357 | prompt processing done, n_tokens = 1892, batch.n_tokens = 4
+2026-04-25 13:10:00  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 92.2%
+2026-04-25 13:10:00  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
+2026-04-25 13:10:08 [DEBUG]
+ slot print_timing: id  1 | task 357 | 
+prompt eval time =    1289.16 ms /    51 tokens (   25.28 ms per token,    39.56 tokens per second)
+       eval time =    7943.84 ms /    64 tokens (  124.12 ms per token,     8.06 tokens per second)
+      total time =    9233.01 ms /   115 tokens
+slot      release: id  1 | task 357 | stop processing: n_tokens = 1955, truncated = 0
+srv  update_slots: all slots are idle
+2026-04-25 13:10:08 [DEBUG]
+ LlamaV4: server assigned slot 1 to task 357
+2026-04-25 13:10:08  [INFO]
+ [qwen/qwen3.5-9b] Finished streaming response
+2026-04-25 13:10:13 [DEBUG]
+ Received request: POST to /v1/chat/completions with body  {
+  "model": "qwen/qwen3.5-9b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息  \n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_directory",
+        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要列出的目录路径"
+            }
+          },
+          "required": [
+            "directory_path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "rename_file",
+        "description": "修改某个目录下某个文件的名字",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "old_filename": {
+              "type": "string",
+              "description": "旧文件名"
+            },
+            "new_filename": {
+              "type": "string",
+              "description": "新文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "old_filename",
+            "new_filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "delete_file",
+        "description": "删除某个目录下某个文件",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要删除的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_file",
+        "description": "在某个目录下新建一个文件，并且写入内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要创建文件的目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要创建的文件名"
+            },
+            "content": {
+              "type": "string",
+              "description": "要写入文件的内容"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "read_file",
+        "description": "读取某个目录下面的某个文件的内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要读取的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "curl",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "要访问的网页URL"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_chat_history",
+        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "anythingllm_query",
+        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
+            }
+          },
+          "required": [
+            "message"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "max_tokens": 4096,
+  "temperature": 0.6,
+  "stream": true
+}
+2026-04-25 13:10:13  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 16 messages.
+2026-04-25 13:10:13  [INFO]
+ [qwen/qwen3.5-9b] Streaming response...
+2026-04-25 13:10:13 [DEBUG]
+ LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
+2026-04-25 13:10:13 [DEBUG]
+ slot get_availabl: id  1 | task -1 | selected slot by LCP similarity, sim_best = 0.960 (> 0.100 thold), f_keep = 0.966
+2026-04-25 13:10:13 [DEBUG]
+ slot launch_slot_: id  1 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+slot launch_slot_: id  1 | task 423 | processing task, is_child = 0
+slot update_slots: id  1 | task 423 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 1967
+slot update_slots: id  1 | task 423 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  1 | task 423 | n_past = 1888, slot.prompt.tokens.size() = 1955, seq_id = 1, pos_min = 1954, n_swa = 0
+slot update_slots: id  1 | task 423 | Checking checkpoint with [1840, 1840] against 1888...
+2026-04-25 13:10:13 [DEBUG]
+ slot update_slots: id  1 | task 423 | restored context checkpoint (pos_min = 1840, pos_max = 1840, n_tokens = 1841, n_past = 1841, size = 50.251 MiB)
+slot update_slots: id  1 | task 423 | n_tokens = 1841, memory_seq_rm [1841, end)
+slot update_slots: id  1 | task 423 | prompt processing progress, n_tokens = 1963, batch.n_tokens = 122, progress = 0.997966
+2026-04-25 13:10:13  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
+2026-04-25 13:10:15 [DEBUG]
+ slot update_slots: id  1 | task 423 | n_tokens = 1963, memory_seq_rm [1963, end)
+2026-04-25 13:10:15 [DEBUG]
+ slot init_sampler: id  1 | task 423 | init sampler, took 0.30 ms, tokens: text = 1967, total = 1967
+slot update_slots: id  1 | task 423 | prompt processing done, n_tokens = 1967, batch.n_tokens = 4
+2026-04-25 13:10:15  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 96.8%
+2026-04-25 13:10:15 [DEBUG]
+ slot update_slots: id  1 | task 423 | created context checkpoint 7 of 32 (pos_min = 1962, pos_max = 1962, n_tokens = 1963, size = 50.251 MiB)
+2026-04-25 13:10:15  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
+2026-04-25 13:10:20 [DEBUG]
+ slot print_timing: id  1 | task 423 | 
+prompt eval time =    1790.66 ms /   126 tokens (   14.21 ms per token,    70.37 tokens per second)
+       eval time =    5033.33 ms /    41 tokens (  122.76 ms per token,     8.15 tokens per second)
+      total time =    6823.99 ms /   167 tokens
+slot      release: id  1 | task 423 | stop processing: n_tokens = 2007, truncated = 0
+srv  update_slots: all slots are idle
+2026-04-25 13:10:20 [DEBUG]
+ LlamaV4: server assigned slot 1 to task 423
+2026-04-25 13:10:20  [INFO]
+ [qwen/qwen3.5-9b] Finished streaming response
+2026-04-25 13:10:25 [DEBUG]
+ Received request: POST to /v1/chat/completions with body  {
+  "model": "qwen/qwen3.5-9b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息  \n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，随时准备帮助你帮助你。有什么我可以帮帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_directory",
+        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要列出的目录路径"
+            }
+          },
+          "required": [
+            "directory_path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "rename_file",
+        "description": "修改某个目录下某个文件的名字",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "old_filename": {
+              "type": "string",
+              "description": "旧文件名"
+            },
+            "new_filename": {
+              "type": "string",
+              "description": "新文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "old_filename",
+            "new_filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "delete_file",
+        "description": "删除某个目录下某个文件",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要删除的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_file",
+        "description": "在某个目录下新建一个文件，并且写入内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要创建文件的目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要创建的文件名"
+            },
+            "content": {
+              "type": "string",
+              "description": "要写入文件的内容"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "read_file",
+        "description": "读取某个目录下面的某个文件的内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要读取的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "curl",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "要访问的网页URL"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_chat_history",
+        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "anythingllm_query",
+        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
+            }
+          },
+          "required": [
+            "message"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "max_tokens": 4096,
+  "temperature": 0.6,
+  "stream": true
+}
+2026-04-25 13:10:25  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 18 messages.
+2026-04-25 13:10:25  [INFO]
+ [qwen/qwen3.5-9b] Streaming response...
+2026-04-25 13:10:25 [DEBUG]
+ LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
+2026-04-25 13:10:25 [DEBUG]
+ slot get_availabl: id  1 | task -1 | selected slot by LCP similarity, sim_best = 0.971 (> 0.100 thold), f_keep = 0.978
+2026-04-25 13:10:25 [DEBUG]
+ slot launch_slot_: id  1 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+slot launch_slot_: id  1 | task 466 | processing task, is_child = 0
+slot update_slots: id  1 | task 466 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 2021
+slot update_slots: id  1 | task 466 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  1 | task 466 | n_past = 1963, slot.prompt.tokens.size() = 2007, seq_id = 1, pos_min = 2006, n_swa = 0
+slot update_slots: id  1 | task 466 | Checking checkpoint with [1962, 1962] against 1963...
+2026-04-25 13:10:25 [DEBUG]
+ slot update_slots: id  1 | task 466 | restored context checkpoint (pos_min = 1962, pos_max = 1962, n_tokens = 1963, n_past = 1963, size = 50.251 MiB)
+slot update_slots: id  1 | task 466 | n_tokens = 1963, memory_seq_rm [1963, end)
+slot update_slots: id  1 | task 466 | prompt processing progress, n_tokens = 2017, batch.n_tokens = 54, progress = 0.998021
+2026-04-25 13:10:25  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
+2026-04-25 13:10:26 [DEBUG]
+ slot update_slots: id  1 | task 466 | n_tokens = 2017, memory_seq_rm [2017, end)
+2026-04-25 13:10:26 [DEBUG]
+ slot init_sampler: id  1 | task 466 | init sampler, took 0.27 ms, tokens: text = 2021, total = 2021
+slot update_slots: id  1 | task 466 | prompt processing done, n_tokens = 2021, batch.n_tokens = 4
+2026-04-25 13:10:26  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 93.1%
+2026-04-25 13:10:26  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
+2026-04-25 13:10:34 [DEBUG]
+ slot print_timing: id  1 | task 466 | 
+prompt eval time =    1510.65 ms /    58 tokens (   26.05 ms per token,    38.39 tokens per second)
+       eval time =    7926.85 ms /    64 tokens (  123.86 ms per token,     8.07 tokens per second)
+      total time =    9437.50 ms /   122 tokens
+slot      release: id  1 | task 466 | stop processing: n_tokens = 2084, truncated = 0
+srv  update_slots: all slots are idle
+2026-04-25 13:10:34  [INFO]
+ [qwen/qwen3.5-9b] Finished streaming response
+2026-04-25 13:10:34 [DEBUG]
+ LlamaV4: server assigned slot 1 to task 466
+2026-04-25 13:10:37 [DEBUG]
+ Received request: POST to /v1/chat/completions with body  {
+  "model": "qwen/qwen3.5-9b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...要重新格式化\n- 不要添加原始数据中没有的信息或建议\n- 不要翻译或解释工具返回的内容，直接展示即可"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，很高兴见到你你！\n\n我可以帮助你：\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！😊 我随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息  \n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 我是你的AI助手，随时准备帮助你。有什么我可以帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手助手，随时准备帮助你帮助你。有什么我可以帮帮你的吗？无论是文件操作、网页查询还是知识问答，都可以告诉我哦！😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    },
+    {
+      "role": "assistant",
+      "content": "你好！👋 很高兴见到你！我是你的AI助手，可以帮你：\n\n- 📁 管理文件（创建、读取、删除、重命名）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊"
+    },
+    {
+      "role": "user",
+      "content": "你好"
+    }
+  ],
+  "tools": [
+    {
+      "type": "function",
+      "function": {
+        "name": "list_directory",
+        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要列出的目录路径"
+            }
+          },
+          "required": [
+            "directory_path"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "rename_file",
+        "description": "修改某个目录下某个文件的名字",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "old_filename": {
+              "type": "string",
+              "description": "旧文件名"
+            },
+            "new_filename": {
+              "type": "string",
+              "description": "新文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "old_filename",
+            "new_filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "delete_file",
+        "description": "删除某个目录下某个文件",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要删除的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "create_file",
+        "description": "在某个目录下新建一个文件，并且写入内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "要创建文件的目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要创建的文件名"
+            },
+            "content": {
+              "type": "string",
+              "description": "要写入文件的内容"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "read_file",
+        "description": "读取某个目录下面的某个文件的内容",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "directory_path": {
+              "type": "string",
+              "description": "文件所在目录路径"
+            },
+            "filename": {
+              "type": "string",
+              "description": "要读取的文件名"
+            }
+          },
+          "required": [
+            "directory_path",
+            "filename"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "curl",
+        "description": "通过HTTP请求访问网页，并返回网页内容。\n\n【重要提示】\n- 查询wttr.in天气时：\n  1.... <Truncated in logs> ...\n- 不要重复调用相同的URL\n- 不要对返回的数据进行二次格式化\n- 不要添加原始数据中没有的信息",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "要访问的网页URL"
+            }
+          },
+          "required": [
+            "url"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "search_chat_history",
+        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
+            }
+          },
+          "required": [
+            "query"
+          ]
+        }
+      }
+    },
+    {
+      "type": "function",
+      "function": {
+        "name": "anythingllm_query",
+        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string",
+              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
+            }
+          },
+          "required": [
+            "message"
+          ]
+        }
+      }
+    }
+  ],
+  "tool_choice": "auto",
+  "max_tokens": 4096,
+  "temperature": 0.6,
+  "stream": true
+}
+2026-04-25 13:10:37  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 20 messages.
+2026-04-25 13:10:37  [INFO]
+ [qwen/qwen3.5-9b] Streaming response...
+2026-04-25 13:10:37 [DEBUG]
+ LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
+2026-04-25 13:10:37 [DEBUG]
+ slot get_availabl: id  1 | task -1 | selected slot by LCP similarity, sim_best = 0.963 (> 0.100 thold), f_keep = 0.968
+2026-04-25 13:10:37 [DEBUG]
+ slot launch_slot_: id  1 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
+slot launch_slot_: id  1 | task 532 | processing task, is_child = 0
+slot update_slots: id  1 | task 532 | new prompt, n_ctx_slot = 18688, n_keep = 1505, task.n_tokens = 2095
+slot update_slots: id  1 | task 532 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  1 | task 532 | n_past = 2017, slot.prompt.tokens.size() = 2084, seq_id = 1, pos_min = 2083, n_swa = 0
+slot update_slots: id  1 | task 532 | Checking checkpoint with [1962, 1962] against 2017...
+2026-04-25 13:10:37 [DEBUG]
+ slot update_slots: id  1 | task 532 | restored context checkpoint (pos_min = 1962, pos_max = 1962, n_tokens = 1963, n_past = 1963, size = 50.251 MiB)
+slot update_slots: id  1 | task 532 | n_tokens = 1963, memory_seq_rm [1963, end)
+slot update_slots: id  1 | task 532 | prompt processing progress, n_tokens = 2091, batch.n_tokens = 128, progress = 0.998091
+2026-04-25 13:10:37  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
+2026-04-25 13:10:39 [DEBUG]
+ slot update_slots: id  1 | task 532 | n_tokens = 2091, memory_seq_rm [2091, end)
+2026-04-25 13:10:39  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 97.0%
+2026-04-25 13:10:39 [DEBUG]
+ slot init_sampler: id  1 | task 532 | init sampler, took 0.35 ms, tokens: text = 2095, total = 2095
+slot update_slots: id  1 | task 532 | prompt processing done, n_tokens = 2095, batch.n_tokens = 4
+2026-04-25 13:10:39 [DEBUG]
+ slot update_slots: id  1 | task 532 | created context checkpoint 8 of 32 (pos_min = 2090, pos_max = 2090, n_tokens = 2091, size = 50.251 MiB)
+2026-04-25 13:10:39  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
+2026-04-25 13:10:43 [DEBUG]
+ slot print_timing: id  1 | task 532 | 
+prompt eval time =    1883.52 ms /   132 tokens (   14.27 ms per token,    70.08 tokens per second)
+       eval time =    4485.26 ms /    37 tokens (  121.22 ms per token,     8.25 tokens per second)
+      total time =    6368.77 ms /   169 tokens
+slot      release: id  1 | task 532 | stop processing: n_tokens = 2131, truncated = 0
+srv  update_slots: all slots are idle
+2026-04-25 13:10:43 [DEBUG]
+ LlamaV4: server assigned slot 1 to task 532
+2026-04-25 13:10:43  [INFO]
+ [qwen/qwen3.5-9b] Finished streaming response
+2026-04-25 13:10:45 [DEBUG]
+ Received request: POST to /v1/chat/completions with body  {
+  "model": "qwen/qwen3.5-9b",
+  "messages": [
+    {
+      "role": "system",
+      "content": "你是一个专业的信息提取助手。请直接输出 5W 结果，不要输出任何思考过程、分析步骤或额外说明。"
+    },
+    {
+      "role": "user",
+      "content": "请分析以下对话内容，分为两个部分处理。\n\n【第一部分：历史对话摘要】（共5条消息）\n1. 用户: 你... <Truncated in logs> ...过程\n6. 不要在输出中包含 \"Thinking Process\"、\"分析\" 等字样\n\n【开始提取】"
+    }
+  ],
+  "max_tokens": 4096,
+  "temperature": 0.5,
+  "stream": false
+}
+2026-04-25 13:10:45  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 2 messages.
+2026-04-25 13:10:45 [DEBUG]
+ LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
+2026-04-25 13:10:45 [DEBUG]
  slot get_availabl: id  0 | task -1 | selected slot by LRU, t_last = -1
 srv  get_availabl: updating prompt cache
 srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
-srv          load:  - found better prompt with f_keep = 0.577, sim = 0.440
-2026-04-24 11:35:00 [DEBUG]
- srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 60160 tokens, 8589934592 est)
-srv  get_availabl: prompt cache update took 805.22 ms
+srv        update:  - cache state: 1 prompts, 159.362 MiB (limits: 8192.000 MiB, 18688 tokens, 45236 est)
+srv        update:    - prompt 000002A40B65D4D0:     880 tokens, checkpoints:  2,   159.362 MiB
+srv  get_availabl: prompt cache update took 0.01 ms
 slot launch_slot_: id  0 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  0 | task 819 | processing task, is_child = 0
+slot launch_slot_: id  0 | task 571 | processing task, is_child = 0
 slot slot_save_an: id  1 | task -1 | saving idle slot to prompt cache
-2026-04-24 11:35:00 [DEBUG]
- srv   prompt_save:  - saving prompt with length 2332, total state size = 73.069 MiB
-2026-04-24 11:35:00 [DEBUG]
- slot prompt_clear: id  1 | task -1 | clearing prompt with 2332 tokens
-2026-04-24 11:35:00 [DEBUG]
- srv        update:  - cache state: 1 prompts, 274.071 MiB (limits: 8192.000 MiB, 60160 tokens, 69703 est)
-srv        update:    - prompt 00000371D0FD5A30:    2332 tokens, checkpoints:  4,   274.071 MiB
-slot update_slots: id  0 | task 819 | new prompt, n_ctx_slot = 60160, n_keep = 174, task.n_tokens = 1347
-slot update_slots: id  0 | task 819 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  0 | task 819 | n_past = 593, slot.prompt.tokens.size() = 1027, seq_id = 0, pos_min = 1026, n_swa = 0
-slot update_slots: id  0 | task 819 | Checking checkpoint with [602, 602] against 593...
-slot update_slots: id  0 | task 819 | Checking checkpoint with [94, 94] against 593...
-2026-04-24 11:35:00 [DEBUG]
- slot update_slots: id  0 | task 819 | restored context checkpoint (pos_min = 94, pos_max = 94, n_tokens = 95, n_past = 95, size = 50.251 MiB)
-slot update_slots: id  0 | task 819 | erased invalidated context checkpoint (pos_min = 602, pos_max = 602, n_tokens = 603, n_swa = 0, pos_next = 95, size = 50.251 MiB)
-2026-04-24 11:35:00 [DEBUG]
- slot update_slots: id  0 | task 819 | n_tokens = 95, memory_seq_rm [95, end)
-2026-04-24 11:35:00 [DEBUG]
- slot update_slots: id  0 | task 819 | prompt processing progress, n_tokens = 607, batch.n_tokens = 512, progress = 0.450631
-2026-04-24 11:35:00  [INFO]
+2026-04-25 13:10:45 [DEBUG]
+ srv   prompt_save:  - saving prompt with length 2131, total state size = 71.102 MiB
+2026-04-25 13:10:46 [DEBUG]
+ slot prompt_clear: id  1 | task -1 | clearing prompt with 2131 tokens
+2026-04-25 13:10:46 [DEBUG]
+ srv        update:  - cache state: 2 prompts, 632.469 MiB (limits: 8192.000 MiB, 18688 tokens, 38999 est)
+srv        update:    - prompt 000002A40B65D4D0:     880 tokens, checkpoints:  2,   159.362 MiB
+srv        update:    - prompt 000002A153774B10:    2131 tokens, checkpoints:  8,   473.107 MiB
+slot update_slots: id  0 | task 571 | new prompt, n_ctx_slot = 18688, n_keep = 713, task.n_tokens = 713
+slot update_slots: id  0 | task 571 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  0 | task 571 | n_tokens = 0, memory_seq_rm [0, end)
+slot update_slots: id  0 | task 571 | prompt processing progress, n_tokens = 201, batch.n_tokens = 201, progress = 0.281907
+2026-04-25 13:10:46  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:35:06 [DEBUG]
- slot update_slots: id  0 | task 819 | n_tokens = 607, memory_seq_rm [607, end)
-slot update_slots: id  0 | task 819 | prompt processing progress, n_tokens = 835, batch.n_tokens = 228, progress = 0.619896
-2026-04-24 11:35:06  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 40.9%
-2026-04-24 11:35:07 [DEBUG]
- slot update_slots: id  0 | task 819 | n_tokens = 835, memory_seq_rm [835, end)
-slot update_slots: id  0 | task 819 | prompt processing progress, n_tokens = 1343, batch.n_tokens = 508, progress = 0.997030
-2026-04-24 11:35:07  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 59.1%
-2026-04-24 11:35:07 [DEBUG]
- slot update_slots: id  0 | task 819 | created context checkpoint 2 of 32 (pos_min = 834, pos_max = 834, n_tokens = 835, size = 50.251 MiB)
-2026-04-24 11:35:10 [DEBUG]
- slot update_slots: id  0 | task 819 | n_tokens = 1343, memory_seq_rm [1343, end)
-2026-04-24 11:35:10 [DEBUG]
- slot init_sampler: id  0 | task 819 | init sampler, took 0.18 ms, tokens: text = 1347, total = 1347
-slot update_slots: id  0 | task 819 | prompt processing done, n_tokens = 1347, batch.n_tokens = 4
-2026-04-24 11:35:10  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 99.7%
-2026-04-24 11:35:10 [DEBUG]
- slot update_slots: id  0 | task 819 | created context checkpoint 3 of 32 (pos_min = 1342, pos_max = 1342, n_tokens = 1343, size = 50.251 MiB)
-2026-04-24 11:35:10  [INFO]
+2026-04-25 13:10:47 [DEBUG]
+ slot update_slots: id  0 | task 571 | n_tokens = 201, memory_seq_rm [201, end)
+slot update_slots: id  0 | task 571 | prompt processing progress, n_tokens = 709, batch.n_tokens = 508, progress = 0.994390
+2026-04-25 13:10:47  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 28.2%
+2026-04-25 13:10:47 [DEBUG]
+ slot update_slots: id  0 | task 571 | created context checkpoint 1 of 32 (pos_min = 200, pos_max = 200, n_tokens = 201, size = 50.251 MiB)
+2026-04-25 13:10:49 [DEBUG]
+ slot update_slots: id  0 | task 571 | n_tokens = 709, memory_seq_rm [709, end)
+slot init_sampler: id  0 | task 571 | init sampler, took 0.12 ms, tokens: text = 713, total = 713
+slot update_slots: id  0 | task 571 | prompt processing done, n_tokens = 713, batch.n_tokens = 4
+2026-04-25 13:10:49  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 99.4%
+2026-04-25 13:10:49 [DEBUG]
+ slot update_slots: id  0 | task 571 | created context checkpoint 2 of 32 (pos_min = 708, pos_max = 708, n_tokens = 709, size = 50.251 MiB)
+2026-04-25 13:10:49  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
-2026-04-24 11:35:19 [DEBUG]
- slot print_timing: id  0 | task 819 | 
-prompt eval time =   10551.18 ms /  1252 tokens (    8.43 ms per token,   118.66 tokens per second)
-       eval time =    8663.09 ms /   102 tokens (   84.93 ms per token,    11.77 tokens per second)
-      total time =   19214.27 ms /  1354 tokens
-slot      release: id  0 | task 819 | stop processing: n_tokens = 1448, truncated = 0
+2026-04-25 13:11:00 [DEBUG]
+ slot print_timing: id  0 | task 571 | 
+prompt eval time =    3240.17 ms /   713 tokens (    4.54 ms per token,   220.05 tokens per second)
+       eval time =   11012.84 ms /    90 tokens (  122.36 ms per token,     8.17 tokens per second)
+      total time =   14253.01 ms /   803 tokens
+slot      release: id  0 | task 571 | stop processing: n_tokens = 802, truncated = 0
 srv  update_slots: all slots are idle
-2026-04-24 11:35:19 [DEBUG]
- LlamaV4: server assigned slot 0 to task 819
-2026-04-24 11:35:19  [INFO]
- [qwen/qwen3.5-9b] Finished streaming response
-2026-04-24 11:37:05 [DEBUG]
+2026-04-25 13:11:00 [DEBUG]
+ LlamaV4: server assigned slot 0 to task 571
+2026-04-25 13:11:00  [INFO]
+ [qwen/qwen3.5-9b] Model generated tool calls:  []
+2026-04-25 13:11:00  [INFO]
+ [qwen/qwen3.5-9b] Generated prediction:  {
+  "id": "chatcmpl-7aba8ydzkxm0wjabmi7x1o",
+  "object": "chat.completion",
+  "created": 1777093845,
+  "model": "qwen/qwen3.5-9b",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "=== 历史对话摘要 ===\n用户与AI助手进行了多次重复的简单问候，双方未涉及具体事务。\n\n=== 当前对话 5W 信息 ===\n- Who: 用户与AI助手\n- What: 互相问候及介绍AI助手的文件管理、网页查询等能力\n- When: 当前会话期间\n- Where: 线上对话环境\n- Why: 建立联系并寻求协助",
+        "reasoning_content": "",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 713,
+    "completion_tokens": 90,
+    "total_tokens": 803,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
+    }
+  },
+  "stats": {},
+  "system_fingerprint": "qwen/qwen3.5-9b"
+}
+2026-04-25 13:11:02 [DEBUG]
  Received request: POST to /v1/chat/completions with body  {
   "model": "qwen/qwen3.5-9b",
   "messages": [
     {
       "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
+      "content": "你是一个专业的对话总结助手。请直接输出总结内容，不要输出任何思考过程。"
     },
     {
       "role": "user",
-      "content": "明天成都的天气怎么样？"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "175143857",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "175143857",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n根据查询到的成都天气预报，明天的天气情况如下：\n\n## 🌤️ 整体概况\n- **平均温度**：... <Truncated in logs> ...建议穿短袖或轻薄衣物\n- ☔ 全天无降水，无需带雨具\n\n明天成都天气不错，是个适合出门的好日子！😊"
-    },
-    {
-      "role": "user",
-      "content": "明天多少号呢？你就查"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "527009895",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "527009895",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n<tool_call>\n<function=curl>\n<parameter=url>\nhttps://wttr.in/?format=j1&q=Chengdu\n</parameter>\n</function>\n</tool_call>"
-    },
-    {
-      "role": "user",
-      "content": "我是成都东软的学会生"
+      "content": "请对以下对话历史进行简洁的总结，提取关键信息和上下文。\n\n要求：\n1. 用中文输出总结\n2. 控制在... <Truncated in logs> ...）\n- 🌐 访问网页获取信息\n- 📚 查询文档知识库\n\n有什么我可以帮你的吗？😊\n\n\n\n总结："
     }
   ],
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "list_directory",
-        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要列出的目录路径"
-            }
-          },
-          "required": [
-            "directory_path"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "rename_file",
-        "description": "修改某个目录下某个文件的名字",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "old_filename": {
-              "type": "string",
-              "description": "旧文件名"
-            },
-            "new_filename": {
-              "type": "string",
-              "description": "新文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "old_filename",
-            "new_filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "delete_file",
-        "description": "删除某个目录下某个文件",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要删除的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "create_file",
-        "description": "在某个目录下新建一个文件，并且写入内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要创建文件的目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要创建的文件名"
-            },
-            "content": {
-              "type": "string",
-              "description": "要写入文件的内容"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "read_file",
-        "description": "读取某个目录下面的某个文件的内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要读取的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "url": {
-              "type": "string",
-              "description": "要访问的网页URL"
-            }
-          },
-          "required": [
-            "url"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "search_chat_history",
-        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "anythingllm_query",
-        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string",
-              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
-            }
-          },
-          "required": [
-            "message"
-          ]
-        }
-      }
-    }
-  ],
-  "tool_choice": "auto",
-  "max_tokens": 4096,
-  "temperature": 0.6,
-  "stream": true
+  "max_tokens": 512,
+  "temperature": 0.3,
+  "stream": false
 }
-2026-04-24 11:37:05  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 10 messages.
-2026-04-24 11:37:05  [INFO]
- [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:37:05 [DEBUG]
+2026-04-25 13:11:02  [INFO]
+ [qwen/qwen3.5-9b] Running chat completion on conversation with 2 messages.
+2026-04-25 13:11:02 [DEBUG]
  LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:37:05 [DEBUG]
- slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = 2162233016
+2026-04-25 13:11:02 [DEBUG]
+ slot get_availabl: id  3 | task -1 | selected slot by LRU, t_last = 419137086
 srv  get_availabl: updating prompt cache
 srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
-srv          load:  - found better prompt with f_keep = 0.889, sim = 0.813
-2026-04-24 11:37:07 [DEBUG]
- srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 60160 tokens, 8589934592 est)
-srv  get_availabl: prompt cache update took 1131.39 ms
-2026-04-24 11:37:07 [DEBUG]
+srv        update:  - cache state: 2 prompts, 632.469 MiB (limits: 8192.000 MiB, 18688 tokens, 38999 est)
+srv        update:    - prompt 000002A40B65D4D0:     880 tokens, checkpoints:  2,   159.362 MiB
+srv        update:    - prompt 000002A153774B10:    2131 tokens, checkpoints:  8,   473.107 MiB
+srv  get_availabl: prompt cache update took 0.01 ms
+2026-04-25 13:11:02 [DEBUG]
  slot launch_slot_: id  3 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  3 | task 925 | processing task, is_child = 0
+slot launch_slot_: id  3 | task 664 | processing task, is_child = 0
 slot slot_save_an: id  0 | task -1 | saving idle slot to prompt cache
-srv   prompt_save:  - saving prompt with length 1448, total state size = 64.419 MiB
-2026-04-24 11:37:07 [DEBUG]
- slot prompt_clear: id  0 | task -1 | clearing prompt with 1448 tokens
-2026-04-24 11:37:07 [DEBUG]
- srv        update:  - cache state: 1 prompts, 215.171 MiB (limits: 8192.000 MiB, 60160 tokens, 60160 est)
-srv        update:    - prompt 00000371D0FD5D40:    1448 tokens, checkpoints:  3,   215.171 MiB
-slot update_slots: id  3 | task 925 | new prompt, n_ctx_slot = 60160, n_keep = 1337, task.n_tokens = 2551
-slot update_slots: id  3 | task 925 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  3 | task 925 | n_past = 2073, slot.prompt.tokens.size() = 2332, seq_id = 3, pos_min = 2331, n_swa = 0
-slot update_slots: id  3 | task 925 | Checking checkpoint with [2070, 2070] against 2073...
-2026-04-24 11:37:07 [DEBUG]
- slot update_slots: id  3 | task 925 | restored context checkpoint (pos_min = 2070, pos_max = 2070, n_tokens = 2071, n_past = 2071, size = 50.251 MiB)
-slot update_slots: id  3 | task 925 | n_tokens = 2071, memory_seq_rm [2071, end)
-2026-04-24 11:37:07 [DEBUG]
- slot update_slots: id  3 | task 925 | prompt processing progress, n_tokens = 2547, batch.n_tokens = 476, progress = 0.998432
-2026-04-24 11:37:07  [INFO]
+srv   prompt_save:  - saving prompt with length 802, total state size = 58.098 MiB
+2026-04-25 13:11:02 [DEBUG]
+ slot prompt_clear: id  0 | task -1 | clearing prompt with 802 tokens
+srv        update:  - cache state: 3 prompts, 791.068 MiB (limits: 8192.000 MiB, 18688 tokens, 39485 est)
+srv        update:    - prompt 000002A40B65D4D0:     880 tokens, checkpoints:  2,   159.362 MiB
+srv        update:    - prompt 000002A153774B10:    2131 tokens, checkpoints:  8,   473.107 MiB
+srv        update:    - prompt 000002A4A8CD36A0:     802 tokens, checkpoints:  2,   158.599 MiB
+slot update_slots: id  3 | task 664 | new prompt, n_ctx_slot = 18688, n_keep = 550, task.n_tokens = 550
+slot update_slots: id  3 | task 664 | cache reuse is not supported - ignoring n_cache_reuse = 256
+slot update_slots: id  3 | task 664 | erased invalidated context checkpoint (pos_min = 992, pos_max = 992, n_tokens = 993, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+2026-04-25 13:11:02 [DEBUG]
+ slot update_slots: id  3 | task 664 | erased invalidated context checkpoint (pos_min = 1500, pos_max = 1500, n_tokens = 1501, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+2026-04-25 13:11:02 [DEBUG]
+ slot update_slots: id  3 | task 664 | erased invalidated context checkpoint (pos_min = 1575, pos_max = 1575, n_tokens = 1576, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+2026-04-25 13:11:02 [DEBUG]
+ slot update_slots: id  3 | task 664 | erased invalidated context checkpoint (pos_min = 1690, pos_max = 1690, n_tokens = 1691, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+2026-04-25 13:11:02 [DEBUG]
+ slot update_slots: id  3 | task 664 | erased invalidated context checkpoint (pos_min = 1765, pos_max = 1765, n_tokens = 1766, n_swa = 0, pos_next = 0, size = 50.251 MiB)
+2026-04-25 13:11:02 [DEBUG]
+ slot update_slots: id  3 | task 664 | n_tokens = 0, memory_seq_rm [0, end)
+slot update_slots: id  3 | task 664 | prompt processing progress, n_tokens = 38, batch.n_tokens = 38, progress = 0.069091
+2026-04-25 13:11:02  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:37:10 [DEBUG]
- slot update_slots: id  3 | task 925 | n_tokens = 2547, memory_seq_rm [2547, end)
-2026-04-24 11:37:10 [DEBUG]
- slot init_sampler: id  3 | task 925 | init sampler, took 0.39 ms, tokens: text = 2551, total = 2551
-slot update_slots: id  3 | task 925 | prompt processing done, n_tokens = 2551, batch.n_tokens = 4
-2026-04-24 11:37:10  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 99.2%
-2026-04-24 11:37:11 [DEBUG]
- slot update_slots: id  3 | task 925 | created context checkpoint 5 of 32 (pos_min = 2546, pos_max = 2546, n_tokens = 2547, size = 50.251 MiB)
-2026-04-24 11:37:11  [INFO]
+2026-04-25 13:11:03 [DEBUG]
+ slot update_slots: id  3 | task 664 | n_tokens = 38, memory_seq_rm [38, end)
+slot update_slots: id  3 | task 664 | prompt processing progress, n_tokens = 546, batch.n_tokens = 508, progress = 0.992727
+2026-04-25 13:11:03 [DEBUG]
+ slot update_slots: id  3 | task 664 | created context checkpoint 1 of 32 (pos_min = 37, pos_max = 37, n_tokens = 38, size = 50.251 MiB)
+2026-04-25 13:11:03  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 6.9%
+2026-04-25 13:11:04 [DEBUG]
+ slot update_slots: id  3 | task 664 | n_tokens = 546, memory_seq_rm [546, end)
+slot init_sampler: id  3 | task 664 | init sampler, took 0.10 ms, tokens: text = 550, total = 550
+slot update_slots: id  3 | task 664 | prompt processing done, n_tokens = 550, batch.n_tokens = 4
+2026-04-25 13:11:04  [INFO]
+ [qwen/qwen3.5-9b] Prompt processing progress: 99.3%
+2026-04-25 13:11:04 [DEBUG]
+ slot update_slots: id  3 | task 664 | created context checkpoint 2 of 32 (pos_min = 545, pos_max = 545, n_tokens = 546, size = 50.251 MiB)
+2026-04-25 13:11:05  [INFO]
  [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
-2026-04-24 11:37:17 [DEBUG]
- slot print_timing: id  3 | task 925 | 
-prompt eval time =    4073.98 ms /   480 tokens (    8.49 ms per token,   117.82 tokens per second)
-       eval time =    6549.26 ms /    73 tokens (   89.72 ms per token,    11.15 tokens per second)
-      total time =   10623.25 ms /   553 tokens
-2026-04-24 11:37:17 [DEBUG]
- slot      release: id  3 | task 925 | stop processing: n_tokens = 2623, truncated = 0
+2026-04-25 13:11:13 [DEBUG]
+ slot print_timing: id  3 | task 664 | 
+prompt eval time =    2830.75 ms /   550 tokens (    5.15 ms per token,   194.29 tokens per second)
+       eval time =    8517.05 ms /    69 tokens (  123.44 ms per token,     8.10 tokens per second)
+      total time =   11347.80 ms /   619 tokens
+slot      release: id  3 | task 664 | stop processing: n_tokens = 618, truncated = 0
 srv  update_slots: all slots are idle
-2026-04-24 11:37:17 [DEBUG]
- LlamaV4: server assigned slot 3 to task 925
-2026-04-24 11:37:17  [INFO]
- [qwen/qwen3.5-9b] Finished streaming response
-2026-04-24 11:37:21 [DEBUG]
- Received request: POST to /v1/chat/completions with body  {
+2026-04-25 13:11:13 [DEBUG]
+ LlamaV4: server assigned slot 3 to task 664
+2026-04-25 13:11:13  [INFO]
+ [qwen/qwen3.5-9b] Model generated tool calls:  []
+2026-04-25 13:11:13  [INFO]
+ [qwen/qwen3.5-9b] Generated prediction:  {
+  "id": "chatcmpl-kvcadsw9lgis3y8gq2wlv",
+  "object": "chat.completion",
+  "created": 1777093862,
   "model": "qwen/qwen3.5-9b",
-  "messages": [
+  "choices": [
     {
-      "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
-    },
-    {
-      "role": "user",
-      "content": "明天成都的天气怎么样？"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "175143857",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "175143857",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n根据查询到的成都天气预报，明天的天气情况如下：\n\n## 🌤️ 整体概况\n- **平均温度**：... <Truncated in logs> ...建议穿短袖或轻薄衣物\n- ☔ 全天无降水，无需带雨具\n\n明天成都天气不错，是个适合出门的好日子！😊"
-    },
-    {
-      "role": "user",
-      "content": "明天多少号呢？你就查"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "527009895",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "527009895",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n<tool_call>\n<function=curl>\n<parameter=url>\nhttps://wttr.in/?format=j1&q=Chengdu\n</parameter>\n</function>\n</tool_call>"
-    },
-    {
-      "role": "user",
-      "content": "我是成都东软的学会生"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "687803199",
-          "type": "function",
-          "function": {
-            "name": "anythingllm_query",
-            "arguments": "{\"message\": \"成都东软 信息学院\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "687803199",
-      "name": "anythingllm_query",
-      "content": "{\"success\": false, \"error\": \"查询异常: Curl 执行失败:   % ... <Truncated in logs> ...001 after 2022 ms: Could not connect to server\\n\"}"
-    },
-    {
-      "role": "user",
-      "content": "我是成都东软的学会生"
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "对话双方进行了多次简单的“你好”问候。AI 助手在每次回复中均重申了自身身份，并介绍了核心功能：管理文件（创建、读取、删除、重命名）、访问网页获取信息以及查询文档知识库。目前用户尚未提出具体任务或问题，仅停留在初步打招呼阶段，等待进一步指令。",
+        "reasoning_content": "",
+        "tool_calls": []
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
     }
   ],
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "list_directory",
-        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要列出的目录路径"
-            }
-          },
-          "required": [
-            "directory_path"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "rename_file",
-        "description": "修改某个目录下某个文件的名字",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "old_filename": {
-              "type": "string",
-              "description": "旧文件名"
-            },
-            "new_filename": {
-              "type": "string",
-              "description": "新文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "old_filename",
-            "new_filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "delete_file",
-        "description": "删除某个目录下某个文件",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要删除的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "create_file",
-        "description": "在某个目录下新建一个文件，并且写入内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要创建文件的目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要创建的文件名"
-            },
-            "content": {
-              "type": "string",
-              "description": "要写入文件的内容"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "read_file",
-        "description": "读取某个目录下面的某个文件的内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要读取的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "url": {
-              "type": "string",
-              "description": "要访问的网页URL"
-            }
-          },
-          "required": [
-            "url"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "search_chat_history",
-        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "anythingllm_query",
-        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string",
-              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
-            }
-          },
-          "required": [
-            "message"
-          ]
-        }
-      }
+  "usage": {
+    "prompt_tokens": 550,
+    "completion_tokens": 69,
+    "total_tokens": 619,
+    "completion_tokens_details": {
+      "reasoning_tokens": 0
     }
-  ],
-  "tool_choice": "none",
-  "max_tokens": 4096,
-  "temperature": 0.6,
-  "stream": true
+  },
+  "stats": {},
+  "system_fingerprint": "qwen/qwen3.5-9b"
 }
-2026-04-24 11:37:21  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 13 messages.
-2026-04-24 11:37:21  [INFO]
- [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:37:21 [DEBUG]
- LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:37:21 [DEBUG]
- slot get_availabl: id  2 | task -1 | selected slot by LRU, t_last = 2214188217
-srv  get_availabl: updating prompt cache
-srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
-srv          load:  - found better prompt with f_keep = 0.919, sim = 0.793
-2026-04-24 11:37:22 [DEBUG]
- srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 60160 tokens, 8589934592 est)
-srv  get_availabl: prompt cache update took 841.73 ms
-slot launch_slot_: id  2 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  2 | task 1000 | processing task, is_child = 0
-slot slot_save_an: id  3 | task -1 | saving idle slot to prompt cache
-2026-04-24 11:37:22 [DEBUG]
- srv   prompt_save:  - saving prompt with length 2623, total state size = 75.916 MiB
-2026-04-24 11:37:22 [DEBUG]
- slot prompt_clear: id  3 | task -1 | clearing prompt with 2623 tokens
-2026-04-24 11:37:22 [DEBUG]
- srv        update:  - cache state: 1 prompts, 327.169 MiB (limits: 8192.000 MiB, 60160 tokens, 65677 est)
-srv        update:    - prompt 00000371D0FD5640:    2623 tokens, checkpoints:  5,   327.169 MiB
-slot update_slots: id  2 | task 1000 | new prompt, n_ctx_slot = 60160, n_keep = 174, task.n_tokens = 1678
-slot update_slots: id  2 | task 1000 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  2 | task 1000 | n_past = 1331, slot.prompt.tokens.size() = 1448, seq_id = 2, pos_min = 1447, n_swa = 0
-slot update_slots: id  2 | task 1000 | Checking checkpoint with [1342, 1342] against 1331...
-slot update_slots: id  2 | task 1000 | Checking checkpoint with [834, 834] against 1331...
-2026-04-24 11:37:22 [DEBUG]
- slot update_slots: id  2 | task 1000 | restored context checkpoint (pos_min = 834, pos_max = 834, n_tokens = 835, n_past = 835, size = 50.251 MiB)
-slot update_slots: id  2 | task 1000 | erased invalidated context checkpoint (pos_min = 1342, pos_max = 1342, n_tokens = 1343, n_swa = 0, pos_next = 835, size = 50.251 MiB)
-2026-04-24 11:37:22 [DEBUG]
- slot update_slots: id  2 | task 1000 | n_tokens = 835, memory_seq_rm [835, end)
-slot update_slots: id  2 | task 1000 | prompt processing progress, n_tokens = 1166, batch.n_tokens = 331, progress = 0.694875
-2026-04-24 11:37:22  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:37:24 [DEBUG]
- slot update_slots: id  2 | task 1000 | n_tokens = 1166, memory_seq_rm [1166, end)
-slot update_slots: id  2 | task 1000 | prompt processing progress, n_tokens = 1674, batch.n_tokens = 508, progress = 0.997616
-2026-04-24 11:37:24  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 39.3%
-2026-04-24 11:37:24 [DEBUG]
- slot update_slots: id  2 | task 1000 | created context checkpoint 3 of 32 (pos_min = 1165, pos_max = 1165, n_tokens = 1166, size = 50.251 MiB)
-2026-04-24 11:37:27 [DEBUG]
- slot update_slots: id  2 | task 1000 | n_tokens = 1674, memory_seq_rm [1674, end)
-2026-04-24 11:37:27 [DEBUG]
- slot init_sampler: id  2 | task 1000 | init sampler, took 0.23 ms, tokens: text = 1678, total = 1678
-slot update_slots: id  2 | task 1000 | prompt processing done, n_tokens = 1678, batch.n_tokens = 4
-2026-04-24 11:37:27  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 99.5%
-2026-04-24 11:37:27 [DEBUG]
- slot update_slots: id  2 | task 1000 | created context checkpoint 4 of 32 (pos_min = 1673, pos_max = 1673, n_tokens = 1674, size = 50.251 MiB)
-2026-04-24 11:37:27  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
-2026-04-24 11:37:52 [DEBUG]
- slot print_timing: id  2 | task 1000 | 
-prompt eval time =    4904.40 ms /   843 tokens (    5.82 ms per token,   171.89 tokens per second)
-       eval time =   25245.13 ms /   284 tokens (   88.89 ms per token,    11.25 tokens per second)
-      total time =   30149.54 ms /  1127 tokens
-2026-04-24 11:37:52 [DEBUG]
- slot      release: id  2 | task 1000 | stop processing: n_tokens = 1961, truncated = 0
-srv  update_slots: all slots are idle
-2026-04-24 11:37:52 [DEBUG]
- LlamaV4: server assigned slot 2 to task 1000
-2026-04-24 11:37:52  [INFO]
- [qwen/qwen3.5-9b] Finished streaming response
-2026-04-24 11:38:46 [DEBUG]
- Received request: POST to /v1/chat/completions with body  {
-  "model": "qwen/qwen3.5-9b",
-  "messages": [
-    {
-      "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
-    },
-    {
-      "role": "user",
-      "content": "明天成都的天气怎么样？"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "175143857",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "175143857",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n根据查询到的成都天气预报，明天的天气情况如下：\n\n## 🌤️ 整体概况\n- **平均温度**：... <Truncated in logs> ...建议穿短袖或轻薄衣物\n- ☔ 全天无降水，无需带雨具\n\n明天成都天气不错，是个适合出门的好日子！😊"
-    },
-    {
-      "role": "user",
-      "content": "明天多少号呢？你就查"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "527009895",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "527009895",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n<tool_call>\n<function=curl>\n<parameter=url>\nhttps://wttr.in/?format=j1&q=Chengdu\n</parameter>\n</function>\n</tool_call>"
-    },
-    {
-      "role": "user",
-      "content": "我是成都东软的学会生"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "687803199",
-          "type": "function",
-          "function": {
-            "name": "anythingllm_query",
-            "arguments": "{\"message\": \"成都东软 信息学院\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "687803199",
-      "name": "anythingllm_query",
-      "content": "{\"success\": false, \"error\": \"查询异常: Curl 执行失败:   % ... <Truncated in logs> ...001 after 2022 ms: Could not connect to server\\n\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n你好！很高兴认识你！👋\n\n我是你的AI助手，如果你有任何问题，随时可以问我哦！\n\n根据之前查询... <Truncated in logs> ...动等内容，虽然知识库查询暂时无法连接，但我可以尽力帮你解答其他问题！😊\n\n有什么我可以帮助你的吗？"
-    },
-    {
-      "role": "user",
-      "content": "我爱打篮球"
-    }
-  ],
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "list_directory",
-        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要列出的目录路径"
-            }
-          },
-          "required": [
-            "directory_path"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "rename_file",
-        "description": "修改某个目录下某个文件的名字",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "old_filename": {
-              "type": "string",
-              "description": "旧文件名"
-            },
-            "new_filename": {
-              "type": "string",
-              "description": "新文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "old_filename",
-            "new_filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "delete_file",
-        "description": "删除某个目录下某个文件",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要删除的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "create_file",
-        "description": "在某个目录下新建一个文件，并且写入内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要创建文件的目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要创建的文件名"
-            },
-            "content": {
-              "type": "string",
-              "description": "要写入文件的内容"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "read_file",
-        "description": "读取某个目录下面的某个文件的内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要读取的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "url": {
-              "type": "string",
-              "description": "要访问的网页URL"
-            }
-          },
-          "required": [
-            "url"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "search_chat_history",
-        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "anythingllm_query",
-        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string",
-              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
-            }
-          },
-          "required": [
-            "message"
-          ]
-        }
-      }
-    }
-  ],
-  "tool_choice": "auto",
-  "max_tokens": 4096,
-  "temperature": 0.6,
-  "stream": true
-}
-2026-04-24 11:38:46  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 14 messages.
-2026-04-24 11:38:46  [INFO]
- [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:38:46 [DEBUG]
- LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:38:46 [DEBUG]
- slot get_availabl: id  1 | task -1 | selected slot by LRU, t_last = 2336501820
-srv  get_availabl: updating prompt cache
-srv          load:  - looking for better prompt, base f_keep = -1.000, sim = 0.000
-srv          load:  - found better prompt with f_keep = 0.972, sim = 0.858
-2026-04-24 11:38:48 [DEBUG]
- srv        update:  - cache state: 0 prompts, 0.000 MiB (limits: 8192.000 MiB, 60160 tokens, 8589934592 est)
-srv  get_availabl: prompt cache update took 1305.70 ms
-2026-04-24 11:38:48 [DEBUG]
- slot launch_slot_: id  1 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  1 | task 1287 | processing task, is_child = 0
-slot slot_save_an: id  2 | task -1 | saving idle slot to prompt cache
-srv   prompt_save:  - saving prompt with length 1961, total state size = 69.439 MiB
-2026-04-24 11:38:48 [DEBUG]
- slot prompt_clear: id  2 | task -1 | clearing prompt with 1961 tokens
-2026-04-24 11:38:48 [DEBUG]
- srv        update:  - cache state: 1 prompts, 270.441 MiB (limits: 8192.000 MiB, 60160 tokens, 60160 est)
-srv        update:    - prompt 00000371D0FD5F00:    1961 tokens, checkpoints:  4,   270.441 MiB
-slot update_slots: id  1 | task 1287 | new prompt, n_ctx_slot = 60160, n_keep = 1337, task.n_tokens = 2970
-slot update_slots: id  1 | task 1287 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  1 | task 1287 | n_past = 2549, slot.prompt.tokens.size() = 2623, seq_id = 1, pos_min = 2622, n_swa = 0
-slot update_slots: id  1 | task 1287 | Checking checkpoint with [2546, 2546] against 2549...
-2026-04-24 11:38:48 [DEBUG]
- slot update_slots: id  1 | task 1287 | restored context checkpoint (pos_min = 2546, pos_max = 2546, n_tokens = 2547, n_past = 2547, size = 50.251 MiB)
-slot update_slots: id  1 | task 1287 | n_tokens = 2547, memory_seq_rm [2547, end)
-slot update_slots: id  1 | task 1287 | prompt processing progress, n_tokens = 2966, batch.n_tokens = 419, progress = 0.998653
-2026-04-24 11:38:48  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:38:52 [DEBUG]
- slot update_slots: id  1 | task 1287 | n_tokens = 2966, memory_seq_rm [2966, end)
-2026-04-24 11:38:52 [DEBUG]
- slot init_sampler: id  1 | task 1287 | init sampler, took 0.45 ms, tokens: text = 2970, total = 2970
-slot update_slots: id  1 | task 1287 | prompt processing done, n_tokens = 2970, batch.n_tokens = 4
-2026-04-24 11:38:52  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 99.1%
-2026-04-24 11:38:52 [DEBUG]
- slot update_slots: id  1 | task 1287 | created context checkpoint 6 of 32 (pos_min = 2965, pos_max = 2965, n_tokens = 2966, size = 50.251 MiB)
-2026-04-24 11:38:52  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
-2026-04-24 11:39:04 [DEBUG]
- slot print_timing: id  1 | task 1287 | 
-prompt eval time =    4014.14 ms /   423 tokens (    9.49 ms per token,   105.38 tokens per second)
-       eval time =   11675.93 ms /   140 tokens (   83.40 ms per token,    11.99 tokens per second)
-      total time =   15690.07 ms /   563 tokens
-slot      release: id  1 | task 1287 | stop processing: n_tokens = 3109, truncated = 0
-srv  update_slots: all slots are idle
-2026-04-24 11:39:04 [DEBUG]
- LlamaV4: server assigned slot 1 to task 1287
-2026-04-24 11:39:04  [INFO]
- [qwen/qwen3.5-9b] Finished streaming response
-2026-04-24 11:39:23 [DEBUG]
- Received request: POST to /v1/chat/completions with body  {
-  "model": "qwen/qwen3.5-9b",
-  "messages": [
-    {
-      "role": "system",
-      "content": "你是一个友好的AI助手，具有以下能力：\n1. 文件操作：列出目录、读写文件、重命名、删除\n2. 网页... <Truncated in logs> ...，尝试其他方法或告知用户\n- 从知识库返回结果时，只展示与问题直接相关的内容，过滤掉明显不相关的文档"
-    },
-    {
-      "role": "user",
-      "content": "明天成都的天气怎么样？"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "175143857",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "175143857",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n根据查询到的成都天气预报，明天的天气情况如下：\n\n## 🌤️ 整体概况\n- **平均温度**：... <Truncated in logs> ...建议穿短袖或轻薄衣物\n- ☔ 全天无降水，无需带雨具\n\n明天成都天气不错，是个适合出门的好日子！😊"
-    },
-    {
-      "role": "user",
-      "content": "明天多少号呢？你就查"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "527009895",
-          "type": "function",
-          "function": {
-            "name": "curl",
-            "arguments": "{\"url\": \"https://wttr.in/Chengdu?format=j1\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "527009895",
-      "name": "curl",
-      "content": "{\"success\": true, \"url\": \"https://wttr.in/Chengdu?... <Truncated in logs> ...================================================\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n<tool_call>\n<function=curl>\n<parameter=url>\nhttps://wttr.in/?format=j1&q=Chengdu\n</parameter>\n</function>\n</tool_call>"
-    },
-    {
-      "role": "user",
-      "content": "我是成都东软的学会生"
-    },
-    {
-      "role": "assistant",
-      "tool_calls": [
-        {
-          "id": "687803199",
-          "type": "function",
-          "function": {
-            "name": "anythingllm_query",
-            "arguments": "{\"message\": \"成都东软 信息学院\"}"
-          }
-        }
-      ]
-    },
-    {
-      "role": "tool",
-      "tool_call_id": "687803199",
-      "name": "anythingllm_query",
-      "content": "{\"success\": false, \"error\": \"查询异常: Curl 执行失败:   % ... <Truncated in logs> ...001 after 2022 ms: Could not connect to server\\n\"}"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n你好！很高兴认识你！👋\n\n我是你的AI助手，如果你有任何问题，随时可以问我哦！\n\n根据之前查询... <Truncated in logs> ...动等内容，虽然知识库查询暂时无法连接，但我可以尽力帮你解答其他问题！😊\n\n有什么我可以帮助你的吗？"
-    },
-    {
-      "role": "user",
-      "content": "我爱打篮球"
-    },
-    {
-      "role": "assistant",
-      "content": "\n\n哇！打篮球真是太酷了！🏀\n\n作为成都东软的学生又热爱篮球，你肯定有不少共同的兴趣伙伴吧？\n\n关... <Truncated in logs> ...\n或者你想聊些什么呢？比如最近有什么喜欢的NBABA球队、球员，或者有没有参加过学校的篮球赛呀？😄"
-    },
-    {
-      "role": "user",
-      "content": "NBABA是什么意思呀"
-    }
-  ],
-  "tools": [
-    {
-      "type": "function",
-      "function": {
-        "name": "list_directory",
-        "description": "列出指定目录下的所有文件和子目录，包括文件的基本属性（大小、修改时间等）",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要列出的目录路径"
-            }
-          },
-          "required": [
-            "directory_path"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "rename_file",
-        "description": "修改某个目录下某个文件的名字",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "old_filename": {
-              "type": "string",
-              "description": "旧文件名"
-            },
-            "new_filename": {
-              "type": "string",
-              "description": "新文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "old_filename",
-            "new_filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "delete_file",
-        "description": "删除某个目录下某个文件",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要删除的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "create_file",
-        "description": "在某个目录下新建一个文件，并且写入内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "要创建文件的目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要创建的文件名"
-            },
-            "content": {
-              "type": "string",
-              "description": "要写入文件的内容"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "read_file",
-        "description": "读取某个目录下面的某个文件的内容",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "directory_path": {
-              "type": "string",
-              "description": "文件所在目录路径"
-            },
-            "filename": {
-              "type": "string",
-              "description": "要读取的文件名"
-            }
-          },
-          "required": [
-            "directory_path",
-            "filename"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "curl",
-        "description": "通过HTTP请求访问网页，并返回网页内容。查询wttr.in天气时：\n1. 必须使用英文城市名（如C... <Truncated in logs> ...文名}?format=j1\n示例：https://wttr.in/Chengdu?format=j1",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "url": {
-              "type": "string",
-              "description": "要访问的网页URL"
-            }
-          },
-          "required": [
-            "url"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "search_chat_history",
-        "description": "搜索聊天历史记录。聊天记录保存在日志文件中，每5轮对话会自动提取关键信息。当用户询问之前的对话内容、历史记录时使用此工具。",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "query": {
-              "type": "string",
-              "description": "搜索关键词或查询描述。示例：'第一条历史'、'篮球相关'、'查找历史'、'我之前说过什么'。如果是通用查询（如'查找历史'、'第一条记录'），请传入用户的原始问题。如果是特定关键词搜索，请传入具体的搜索词。"
-            }
-          },
-          "required": [
-            "query"
-          ]
-        }
-      }
-    },
-    {
-      "type": "function",
-      "function": {
-        "name": "anythingllm_query",
-        "description": "查询本地文档仓库/知识库。当用户提到'文档仓库'、'文件仓库'、'知识库'、'查找文档'等关键词时使... <Truncated in logs> ...明显不相关的文档（如文学作品与技术问题），不要展示\n- 如果答案已经足够完整，不需要列出所有来源文档",
-        "parameters": {
-          "type": "object",
-          "properties": {
-            "message": {
-              "type": "string",
-              "description": "要查询的问题，例如：'公司请假政策是什么？'、'项目文档在哪里？'"
-            }
-          },
-          "required": [
-            "message"
-          ]
-        }
-      }
-    }
-  ],
-  "tool_choice": "auto",
-  "max_tokens": 4096,
-  "temperature": 0.6,
-  "stream": true
-}
-2026-04-24 11:39:23  [INFO]
- [qwen/qwen3.5-9b] Running chat completion on conversation with 16 messages.
-2026-04-24 11:39:23  [INFO]
- [qwen/qwen3.5-9b] Streaming response...
-2026-04-24 11:39:23 [DEBUG]
- LlamaV4::predict slot selection: session_id=<empty> server-selected (LCP/LRU)
-2026-04-24 11:39:23 [DEBUG]
- slot get_availabl: id  1 | task -1 | selected slot by LCP similarity, sim_best = 0.962 (> 0.100 thold), f_keep = 0.955
-2026-04-24 11:39:23 [DEBUG]
- slot launch_slot_: id  1 | task -1 | sampler chain: logits -> penalties -> ?dry -> ?top-n-sigma -> top-k -> ?typical -> top-p -> ?min-p -> ?xtc -> temp-ext -> dist 
-slot launch_slot_: id  1 | task 1429 | processing task, is_child = 0
-slot update_slots: id  1 | task 1429 | new prompt, n_ctx_slot = 60160, n_keep = 1337, task.n_tokens = 3085
-slot update_slots: id  1 | task 1429 | cache reuse is not supported - ignoring n_cache_reuse = 256
-slot update_slots: id  1 | task 1429 | n_past = 2968, slot.prompt.tokens.size() = 3109, seq_id = 1, pos_min = 3108, n_swa = 0
-slot update_slots: id  1 | task 1429 | Checking checkpoint with [2965, 2965] against 2968...
-2026-04-24 11:39:23 [DEBUG]
- slot update_slots: id  1 | task 1429 | restored context checkpoint (pos_min = 2965, pos_max = 2965, n_tokens = 2966, n_past = 2966, size = 50.251 MiB)
-slot update_slots: id  1 | task 1429 | n_tokens = 2966, memory_seq_rm [2966, end)
-slot update_slots: id  1 | task 1429 | prompt processing progress, n_tokens = 3081, batch.n_tokens = 115, progress = 0.998703
-2026-04-24 11:39:23  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 0.0%
-2026-04-24 11:39:25 [DEBUG]
- slot update_slots: id  1 | task 1429 | n_tokens = 3081, memory_seq_rm [3081, end)
-2026-04-24 11:39:25 [DEBUG]
- slot init_sampler: id  1 | task 1429 | init sampler, took 0.41 ms, tokens: text = 3085, total = 3085
-slot update_slots: id  1 | task 1429 | prompt processing done, n_tokens = 3085, batch.n_tokens = 4
-2026-04-24 11:39:25  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 96.6%
-2026-04-24 11:39:25 [DEBUG]
- slot update_slots: id  1 | task 1429 | created context checkpoint 7 of 32 (pos_min = 3080, pos_max = 3080, n_tokens = 3081, size = 50.251 MiB)
-2026-04-24 11:39:25  [INFO]
- [qwen/qwen3.5-9b] Prompt processing progress: 100.0%
